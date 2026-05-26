@@ -28,6 +28,7 @@ export type Project = {
   description: string;
   features: string[];
   accent: string;
+  githubUrl: string;
 };
 
 export const navItems = [
@@ -55,17 +56,18 @@ export const skills: Skill[] = [
 
 export const projects: Project[] = [
   {
-    title: "ZARVISS AI",
+    title: "Virtual Hand Painter",
     description:
-      "An advanced AI assistant engineered with automation, voice interaction, local LLM integration, and futuristic workflows.",
+      "A computer vision painting experience that tracks hand movement and turns gestures into a real-time digital canvas.",
     features: [
-      "Voice Assistant",
-      "Local AI Models",
-      "Automation Engine",
-      "Real-Time Responses",
-      "API Integrations",
+      "Hand Tracking",
+      "OpenCV",
+      "Gesture Control",
+      "Real-Time Drawing",
+      "Computer Vision",
     ],
     accent: "from-electric via-cyan-200 to-white",
+    githubUrl: "https://github.com/debargha10/Virtual-Painter",
   },
   {
     title: "Plant Disease Detection System",
@@ -78,18 +80,20 @@ export const projects: Project[] = [
       "Prediction Dashboard",
     ],
     accent: "from-emerald-300 via-electric to-white",
+    githubUrl: "https://github.com/debargha10",
   },
   {
-    title: "Event Management Platform",
+    title: "Scott Cart",
     description:
-      "Dynamic event management and client coordination system built for scalable event operations.",
+      "A clean shopping cart experience designed for product browsing, cart management, and smooth ecommerce interactions.",
     features: [
-      "Client Management",
-      "Event Tracking",
-      "Analytics Dashboard",
-      "Workflow Automation",
+      "Shopping Cart",
+      "Product UI",
+      "Checkout Flow",
+      "Responsive Storefront",
     ],
     accent: "from-violet-300 via-electric to-white",
+    githubUrl: "https://github.com/debargha10/scott-cart",
   },
 ];
 
