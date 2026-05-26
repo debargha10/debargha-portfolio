@@ -145,8 +145,16 @@ export const testimonials = [
 ];
 
 export const socials = [
-  { label: "GitHub", href: "https://github.com/", icon: GitBranch },
-  { label: "LinkedIn", href: "https://linkedin.com/", icon: BriefcaseBusiness },
-  { label: "Instagram", href: "https://instagram.com/", icon: Sparkles },
+  { label: "GitHub", href: "https://github.com/debargha10", icon: GitBranch },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/debargha-adhikary-504234232/",
+    icon: BriefcaseBusiness,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/debargha.19/",
+    icon: Sparkles,
+  },
   { label: "Email", href: "mailto:hello@example.com", icon: Mail },
 ];
