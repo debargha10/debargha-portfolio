@@ -23,7 +23,12 @@ export function Contact() {
           viewport={{ once: true, margin: "-120px" }}
           className="glass mx-auto max-w-3xl rounded-[2rem] p-5 md:p-8"
         >
-          <form className="grid gap-4" aria-label="Contact form">
+          <form
+  action="https://formspree.io/f/xlgvobvg"
+  method="POST"
+  className="grid gap-4"
+  aria-label="Contact form"
+>
             <div className="grid gap-4 md:grid-cols-2">
               <label className="sr-only" htmlFor="name">Name</label>
               <input
