@@ -2,7 +2,6 @@
 
 import { ArrowDown, ArrowRight, Mail } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ThreeBackground } from "@/components/three-background";
 import { ease } from "@/lib/motion";
 
 export function Hero() {
@@ -15,14 +14,13 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-28"
     >
-      <ThreeBackground />
       <motion.div
-        className="absolute inset-x-[-12%] top-[-28%] h-[44rem] rounded-full bg-[radial-gradient(circle,rgba(69,163,255,0.34),transparent_62%)] blur-3xl"
+        className="absolute inset-x-[-12%] top-[-28%] h-[44rem] rounded-full bg-[radial-gradient(circle,rgba(118,91,255,0.28),rgba(69,163,255,0.2)_32%,transparent_64%)] blur-3xl"
         animate={{ scale: [1, 1.08, 1], opacity: [0.65, 0.92, 0.65] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,5,5,0.16),#050505_91%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(2,3,11,0.04),rgba(2,3,11,0.82)_91%)]" />
       <motion.div
         style={{ y, opacity }}
         className="relative z-10 mx-auto max-w-6xl text-center"
@@ -60,14 +58,14 @@ export function Hero() {
         >
           <a
             href="#projects"
-            className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black shadow-glow transition hover:scale-[1.03] hover:bg-electric hover:text-white"
+            className="stellar-interactive group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black shadow-glow transition hover:scale-[1.03] hover:bg-electric hover:text-white"
           >
             Explore Projects
             <ArrowRight size={17} className="transition group-hover:translate-x-1" />
           </a>
           <a
             href="#contact"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.06] px-6 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/30 hover:bg-white/[0.12]"
+            className="stellar-interactive inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.06] px-6 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/30 hover:bg-white/[0.12]"
           >
             <Mail size={17} />
             Contact Me

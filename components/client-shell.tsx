@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useLenis } from "@/hooks/use-lenis";
 import { CursorGlow } from "@/components/cursor-glow";
 import { ScrollProgress } from "@/components/scroll-progress";
+import { ThreeBackground } from "@/components/three-background";
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -37,9 +38,11 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
           </motion.div>
         ) : null}
       </AnimatePresence>
+      <ThreeBackground />
+      <div className="cosmic-veil" aria-hidden="true" />
       <ScrollProgress />
       <CursorGlow />
-      {children}
+      <div className="relative z-10">{children}</div>
     </>
   );
 }
