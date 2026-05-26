@@ -39,6 +39,11 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
         ) : null}
       </AnimatePresence>
       <ThreeBackground />
+      <div className="space-canvas" aria-hidden="true">
+        <span className="shooting-star shooting-star-a" />
+        <span className="shooting-star shooting-star-b" />
+        <span className="shooting-star shooting-star-c" />
+      </div>
       <div className="cosmic-veil" aria-hidden="true" />
       <ScrollProgress />
       <CursorGlow />

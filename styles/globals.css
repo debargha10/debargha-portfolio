@@ -65,7 +65,7 @@ textarea {
   pointer-events: none;
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(94, 129, 255, 0.18), transparent 46%),
     radial-gradient(ellipse at 18% 78%, rgba(0, 210, 255, 0.08), transparent 36%),
@@ -73,6 +73,81 @@ textarea {
     linear-gradient(90deg, rgba(2, 3, 11, 0.2), transparent 32%, transparent 68%, rgba(2, 3, 11, 0.24));
   mix-blend-mode: screen;
   opacity: 0.72;
+}
+
+.space-canvas {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 22%, rgba(81, 126, 255, 0.34), transparent 16rem),
+    radial-gradient(circle at 72% 16%, rgba(155, 93, 255, 0.28), transparent 20rem),
+    radial-gradient(circle at 54% 72%, rgba(0, 210, 255, 0.17), transparent 22rem),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 30%, rgba(255, 255, 255, 0.38) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 72% 64%, rgba(141, 198, 255, 0.42) 0 1px, transparent 1.8px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    82px 82px,
+    137px 137px,
+    211px 211px;
+  animation: starfieldDrift 42s linear infinite;
+}
+
+.space-canvas::before,
+.space-canvas::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  opacity: 0.72;
+  background:
+    radial-gradient(ellipse at 28% 42%, rgba(69, 163, 255, 0.2), transparent 34%),
+    radial-gradient(ellipse at 70% 48%, rgba(169, 93, 255, 0.18), transparent 36%),
+    radial-gradient(ellipse at 46% 62%, rgba(255, 255, 255, 0.055), transparent 28%);
+  filter: blur(38px);
+  transform-origin: 50% 50%;
+  animation: galaxyBreathe 18s ease-in-out infinite;
+}
+
+.space-canvas::after {
+  opacity: 0.42;
+  filter: blur(58px);
+  animation-duration: 26s;
+  animation-direction: reverse;
+}
+
+.shooting-star {
+  position: absolute;
+  left: 80%;
+  top: 18%;
+  width: 11rem;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), rgba(106, 167, 255, 0.25), transparent);
+  filter: drop-shadow(0 0 10px rgba(117, 185, 255, 0.9));
+  opacity: 0;
+  transform: rotate(-28deg) translate3d(0, 0, 0);
+  animation: shootingStar 7s ease-in-out infinite;
+}
+
+.shooting-star-b {
+  left: 68%;
+  top: 46%;
+  width: 8rem;
+  animation-delay: 2.8s;
+  animation-duration: 8.5s;
+}
+
+.shooting-star-c {
+  left: 88%;
+  top: 72%;
+  width: 10rem;
+  animation-delay: 5.4s;
+  animation-duration: 9.5s;
 }
 
 .cosmic-veil::before {
@@ -200,6 +275,55 @@ textarea {
   100% {
     transform: rotate(360deg) scale(1);
     opacity: 0.45;
+  }
+}
+
+@keyframes starfieldDrift {
+  0% {
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      -220px 160px,
+      180px -240px,
+      -260px -180px;
+  }
+}
+
+@keyframes galaxyBreathe {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: rotate(8deg) scale(1.08);
+    opacity: 0.82;
+  }
+}
+
+@keyframes shootingStar {
+  0%,
+  62%,
+  100% {
+    opacity: 0;
+    transform: rotate(-28deg) translate3d(0, 0, 0);
+  }
+  68% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 0;
+    transform: rotate(-28deg) translate3d(-48rem, 24rem, 0);
   }
 }
 
