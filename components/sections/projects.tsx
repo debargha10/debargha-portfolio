@@ -24,12 +24,12 @@ export function Projects() {
               whileInView="visible"
               viewport={{ once: true, margin: "-140px" }}
               whileHover={{ scale: 1.01 }}
-              className="group sticky top-24 overflow-hidden rounded-[2rem] border border-white/10 bg-[#080a0f]/90 p-5 shadow-glass backdrop-blur-xl md:p-8"
+              className="group sticky top-24 overflow-hidden rounded-[2rem] border border-white/10 bg-[#030713]/70 p-5 shadow-glass backdrop-blur-xl md:p-8"
               style={{ zIndex: 10 + index }}
             >
               <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${project.accent}`} />
               <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="relative min-h-[300px] overflow-hidden rounded-3xl border border-white/10 bg-black">
+                <div className="relative min-h-[300px] overflow-hidden rounded-3xl border border-white/10 bg-black/45">
                   <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-20 blur-2xl`} />
                   <motion.div
                     className="absolute inset-10 rounded-full border border-white/10"

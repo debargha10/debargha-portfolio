@@ -19,7 +19,7 @@ export function Navbar() {
       <nav
         className={`mx-auto flex max-w-6xl items-center justify-between rounded-full border px-4 py-3 transition duration-500 md:px-5 ${
           isScrolled
-            ? "border-white/[0.12] bg-black/[0.48] shadow-glass backdrop-blur-2xl"
+            ? "border-white/[0.12] bg-black/[0.34] shadow-glass backdrop-blur-2xl"
             : "border-white/[0.08] bg-white/[0.05] backdrop-blur-md"
         }`}
         aria-label="Primary navigation"

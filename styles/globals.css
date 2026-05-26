@@ -22,10 +22,10 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 18% 12%, rgba(126, 91, 255, 0.17), transparent 28rem),
-    radial-gradient(circle at 82% 18%, rgba(69, 163, 255, 0.15), transparent 32rem),
-    radial-gradient(circle at 48% 110%, rgba(37, 224, 255, 0.09), transparent 36rem),
-    linear-gradient(180deg, #02030b 0%, #050712 44%, #02030b 100%);
+    radial-gradient(circle at 18% 12%, rgba(126, 91, 255, 0.24), transparent 28rem),
+    radial-gradient(circle at 82% 18%, rgba(69, 163, 255, 0.22), transparent 32rem),
+    radial-gradient(circle at 48% 110%, rgba(37, 224, 255, 0.15), transparent 36rem),
+    linear-gradient(180deg, #01020a 0%, #030512 44%, #01020a 100%);
   color: var(--foreground);
   font-family: var(--font-sf);
   letter-spacing: 0;
@@ -51,8 +51,8 @@ textarea {
 .glass {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background:
-    radial-gradient(circle at 18% 12%, rgba(106, 167, 255, 0.14), transparent 42%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.028));
+    radial-gradient(circle at 18% 12%, rgba(106, 167, 255, 0.1), transparent 42%),
+    linear-gradient(135deg, rgba(4, 8, 24, 0.6), rgba(255, 255, 255, 0.026));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 0 38px rgba(69, 163, 255, 0.07),
@@ -67,12 +67,12 @@ textarea {
   inset: 0;
   z-index: 2;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(94, 129, 255, 0.18), transparent 46%),
-    radial-gradient(ellipse at 18% 78%, rgba(0, 210, 255, 0.08), transparent 36%),
-    radial-gradient(ellipse at 86% 64%, rgba(171, 112, 255, 0.1), transparent 34%),
-    linear-gradient(90deg, rgba(2, 3, 11, 0.2), transparent 32%, transparent 68%, rgba(2, 3, 11, 0.24));
+    radial-gradient(ellipse at 50% 0%, rgba(94, 129, 255, 0.28), transparent 48%),
+    radial-gradient(ellipse at 18% 78%, rgba(0, 210, 255, 0.16), transparent 38%),
+    radial-gradient(ellipse at 86% 64%, rgba(171, 112, 255, 0.18), transparent 36%),
+    linear-gradient(90deg, rgba(1, 2, 10, 0.1), transparent 32%, transparent 68%, rgba(1, 2, 10, 0.16));
   mix-blend-mode: screen;
-  opacity: 0.72;
+  opacity: 0.9;
 }
 
 .space-canvas {
@@ -82,20 +82,22 @@ textarea {
   z-index: 1;
   overflow: hidden;
   background:
-    radial-gradient(circle at 16% 22%, rgba(81, 126, 255, 0.34), transparent 16rem),
-    radial-gradient(circle at 72% 16%, rgba(155, 93, 255, 0.28), transparent 20rem),
-    radial-gradient(circle at 54% 72%, rgba(0, 210, 255, 0.17), transparent 22rem),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.4px),
-    radial-gradient(circle at 28% 30%, rgba(255, 255, 255, 0.38) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 72% 64%, rgba(141, 198, 255, 0.42) 0 1px, transparent 1.8px);
+    radial-gradient(circle at 16% 22%, rgba(81, 126, 255, 0.56), transparent 18rem),
+    radial-gradient(circle at 72% 16%, rgba(155, 93, 255, 0.46), transparent 23rem),
+    radial-gradient(circle at 54% 72%, rgba(0, 210, 255, 0.3), transparent 26rem),
+    radial-gradient(circle at 24% 82%, rgba(255, 184, 108, 0.16), transparent 17rem),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 28% 30%, rgba(255, 255, 255, 0.62) 0 1.1px, transparent 1.9px),
+    radial-gradient(circle at 72% 64%, rgba(141, 198, 255, 0.68) 0 1.2px, transparent 2px);
   background-size:
+    100% 100%,
     100% 100%,
     100% 100%,
     100% 100%,
     82px 82px,
     137px 137px,
     211px 211px;
-  animation: starfieldDrift 42s linear infinite;
+  animation: starfieldDrift 32s linear infinite;
 }
 
 .space-canvas::before,
@@ -105,19 +107,115 @@ textarea {
   inset: -20%;
   opacity: 0.72;
   background:
-    radial-gradient(ellipse at 28% 42%, rgba(69, 163, 255, 0.2), transparent 34%),
-    radial-gradient(ellipse at 70% 48%, rgba(169, 93, 255, 0.18), transparent 36%),
-    radial-gradient(ellipse at 46% 62%, rgba(255, 255, 255, 0.055), transparent 28%);
-  filter: blur(38px);
+    radial-gradient(ellipse at 28% 42%, rgba(69, 163, 255, 0.36), transparent 34%),
+    radial-gradient(ellipse at 70% 48%, rgba(169, 93, 255, 0.32), transparent 36%),
+    radial-gradient(ellipse at 46% 62%, rgba(255, 255, 255, 0.12), transparent 28%);
+  filter: blur(30px);
   transform-origin: 50% 50%;
   animation: galaxyBreathe 18s ease-in-out infinite;
 }
 
 .space-canvas::after {
-  opacity: 0.42;
-  filter: blur(58px);
+  opacity: 0.58;
+  filter: blur(44px);
   animation-duration: 26s;
   animation-direction: reverse;
+}
+
+.solar-system {
+  position: absolute;
+  right: clamp(-9rem, -4vw, 2rem);
+  top: clamp(7rem, 14vh, 12rem);
+  width: min(48rem, 72vw);
+  aspect-ratio: 1;
+  opacity: 0.92;
+  transform: rotateX(58deg) rotateZ(-18deg);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 0 28px rgba(69, 163, 255, 0.28));
+}
+
+.sun {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(4.5rem, 10vw, 7rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 30%, #fff6c7 0 12%, #ffd36b 23%, #ff8b3d 48%, rgba(255, 102, 58, 0.2) 68%, transparent 72%);
+  box-shadow:
+    0 0 38px rgba(255, 214, 102, 0.86),
+    0 0 90px rgba(255, 130, 58, 0.52),
+    0 0 180px rgba(255, 106, 69, 0.28);
+  transform: translate(-50%, -50%) rotateX(-58deg);
+  animation: sunPulse 4.8s ease-in-out infinite;
+}
+
+.orbit {
+  position: absolute;
+  inset: var(--orbit-inset);
+  border: 1px solid rgba(174, 214, 255, 0.26);
+  border-radius: 999px;
+  transform-style: preserve-3d;
+  animation: orbitSpin var(--orbit-speed) linear infinite;
+}
+
+.orbit-one {
+  --orbit-inset: 35%;
+  --orbit-speed: 10s;
+}
+
+.orbit-two {
+  --orbit-inset: 25%;
+  --orbit-speed: 17s;
+}
+
+.orbit-three {
+  --orbit-inset: 15%;
+  --orbit-speed: 25s;
+}
+
+.orbit-four {
+  --orbit-inset: 6%;
+  --orbit-speed: 36s;
+}
+
+.planet {
+  position: absolute;
+  left: 50%;
+  top: -0.42rem;
+  display: block;
+  border-radius: 999px;
+  transform: translateX(-50%) rotateX(-58deg);
+  box-shadow: 0 0 22px currentColor;
+}
+
+.planet-one {
+  width: 0.8rem;
+  aspect-ratio: 1;
+  color: rgba(136, 220, 255, 0.9);
+  background: radial-gradient(circle at 35% 30%, #ffffff, #61d8ff 52%, #1b6cff);
+}
+
+.planet-two {
+  width: 1.15rem;
+  aspect-ratio: 1;
+  color: rgba(169, 120, 255, 0.95);
+  background: radial-gradient(circle at 35% 30%, #f5ecff, #a978ff 48%, #4d2cff);
+}
+
+.planet-three {
+  width: 1.35rem;
+  aspect-ratio: 1;
+  color: rgba(74, 255, 210, 0.8);
+  background: radial-gradient(circle at 35% 30%, #eafffb, #4affd2 46%, #167dff);
+}
+
+.planet-four {
+  width: 1rem;
+  aspect-ratio: 1;
+  color: rgba(255, 202, 128, 0.88);
+  background: radial-gradient(circle at 35% 30%, #fff5d8, #ffca80 46%, #ff6e54);
 }
 
 .shooting-star {
@@ -125,10 +223,10 @@ textarea {
   left: 80%;
   top: 18%;
   width: 11rem;
-  height: 1px;
+  height: 2px;
   border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), rgba(106, 167, 255, 0.25), transparent);
-  filter: drop-shadow(0 0 10px rgba(117, 185, 255, 0.9));
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), rgba(106, 167, 255, 0.58), transparent);
+  filter: drop-shadow(0 0 14px rgba(117, 185, 255, 1));
   opacity: 0;
   transform: rotate(-28deg) translate3d(0, 0, 0);
   animation: shootingStar 7s ease-in-out infinite;
@@ -148,6 +246,22 @@ textarea {
   width: 10rem;
   animation-delay: 5.4s;
   animation-duration: 9.5s;
+}
+
+.shooting-star-d {
+  left: 58%;
+  top: 28%;
+  width: 13rem;
+  animation-delay: 1.4s;
+  animation-duration: 6.4s;
+}
+
+.shooting-star-e {
+  left: 94%;
+  top: 38%;
+  width: 15rem;
+  animation-delay: 4.4s;
+  animation-duration: 7.6s;
 }
 
 .cosmic-veil::before {
@@ -286,10 +400,12 @@ textarea {
       0 0,
       0 0,
       0 0,
+      0 0,
       0 0;
   }
   100% {
     background-position:
+      0 0,
       0 0,
       0 0,
       0 0,
@@ -324,6 +440,24 @@ textarea {
   82% {
     opacity: 0;
     transform: rotate(-28deg) translate3d(-48rem, 24rem, 0);
+  }
+}
+
+@keyframes sunPulse {
+  0%,
+  100% {
+    filter: brightness(1);
+    transform: translate(-50%, -50%) rotateX(-58deg) scale(1);
+  }
+  50% {
+    filter: brightness(1.22);
+    transform: translate(-50%, -50%) rotateX(-58deg) scale(1.08);
+  }
+}
+
+@keyframes orbitSpin {
+  to {
+    transform: rotateZ(360deg);
   }
 }
 

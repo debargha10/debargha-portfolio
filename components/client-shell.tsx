@@ -40,9 +40,26 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
       <ThreeBackground />
       <div className="space-canvas" aria-hidden="true">
+        <div className="solar-system">
+          <span className="sun" />
+          <span className="orbit orbit-one">
+            <span className="planet planet-one" />
+          </span>
+          <span className="orbit orbit-two">
+            <span className="planet planet-two" />
+          </span>
+          <span className="orbit orbit-three">
+            <span className="planet planet-three" />
+          </span>
+          <span className="orbit orbit-four">
+            <span className="planet planet-four" />
+          </span>
+        </div>
         <span className="shooting-star shooting-star-a" />
         <span className="shooting-star shooting-star-b" />
         <span className="shooting-star shooting-star-c" />
+        <span className="shooting-star shooting-star-d" />
+        <span className="shooting-star shooting-star-e" />
       </div>
       <div className="cosmic-veil" aria-hidden="true" />
       <ScrollProgress />
