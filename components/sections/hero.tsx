@@ -58,14 +58,14 @@ export function Hero() {
         >
           <a
             href="#projects"
-            className="stellar-interactive group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black shadow-glow transition hover:scale-[1.03] hover:bg-electric hover:text-white"
+            className="cosmic-key stellar-interactive group inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition hover:scale-[1.03]"
           >
             Explore Projects
             <ArrowRight size={17} className="transition group-hover:translate-x-1" />
           </a>
           <a
             href="#contact"
-            className="stellar-interactive inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.06] px-6 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/30 hover:bg-white/[0.12]"
+            className="cosmic-key stellar-interactive inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition"
           >
             <Mail size={17} />
             Contact Me

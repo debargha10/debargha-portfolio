@@ -72,7 +72,7 @@ export function Projects() {
                   <div className="mt-9 flex flex-wrap gap-4">
                     <a
                       href="#contact"
-                      className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-black transition hover:bg-electric hover:text-white"
+                      className="cosmic-key inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold transition"
                     >
                       Send Message
                       <ArrowUpRight size={16} />

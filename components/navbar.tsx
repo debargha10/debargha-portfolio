@@ -40,7 +40,7 @@ export function Navbar() {
         </div>
         <a
           href="#contact"
-          className="hidden rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-electric hover:text-white md:inline-flex"
+          className="cosmic-key hidden rounded-full px-4 py-2 text-sm font-medium transition md:inline-flex"
         >
           Let&apos;s build
         </a>

@@ -56,7 +56,7 @@ export function Contact() {
             />
             <button
               type="submit"
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black transition hover:bg-electric hover:text-white md:w-auto md:justify-self-end"
+              className="cosmic-key inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition md:w-auto md:justify-self-end"
             >
               Send Message
               <Send size={17} />
