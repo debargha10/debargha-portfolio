@@ -138,17 +138,10 @@ export function TravelDiary() {
               initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="diary-hero-copy max-w-3xl"
+              className="diary-typewriter-wrap"
             >
-              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.38em] text-electric">
-                My Diary
-              </p>
-              <h1 className="text-6xl font-semibold leading-none md:text-8xl">
-                exploring the new
-              </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
-                A dim-dark gallery of travel frames, looping moments, and moving memories.
-              </p>
+              <TypewriterLine text="MY DIARY" />
+              <TypewriterLine text="exploring the new" offset={8} />
             </motion.div>
           </div>
         </section>
@@ -249,5 +242,27 @@ export function TravelDiary() {
         </div>
       ) : null}
     </main>
+  );
+}
+
+function TypewriterLine({ text, offset = 0 }: { text: string; offset?: number }) {
+  return (
+    <p className="diary-typewriter-line" aria-label={text}>
+      {Array.from(text).map((letter, index) => (
+        <motion.span
+          key={`${letter}-${index}`}
+          aria-hidden="true"
+          initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+          animate={{ opacity: letter === " " ? 1 : 0.82, y: 0, filter: "blur(0px)" }}
+          transition={{
+            delay: (offset + index) * 0.5,
+            duration: 0.32,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          {letter === " " ? "\u00a0" : letter}
+        </motion.span>
+      ))}
+    </p>
   );
 }

@@ -564,26 +564,34 @@ textarea {
   filter: none;
 }
 
-.diary-hero-copy {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 2rem;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.018)),
-    rgba(255, 255, 255, 0.02);
-  padding: clamp(1.4rem, 4vw, 2.4rem);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 20px 70px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(4px) saturate(1.04);
+.diary-typewriter-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.4rem 0;
+  text-shadow:
+    0 0 26px rgba(255, 255, 255, 0.2),
+    0 10px 34px rgba(0, 0, 0, 0.68);
 }
 
-.diary-hero-copy h1 {
-  color: rgba(255, 255, 255, 0.76);
-  text-shadow: 0 8px 36px rgba(0, 0, 0, 0.5);
+.diary-typewriter-line {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+  font-family: "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  font-size: clamp(23px, 2.4vw, 27px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
 }
 
-.diary-hero-copy p {
-  color: rgba(255, 255, 255, 0.68);
+.diary-typewriter-line:first-child {
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.diary-typewriter-line span {
+  display: inline-block;
 }
 
 .diary-lower-stage {
