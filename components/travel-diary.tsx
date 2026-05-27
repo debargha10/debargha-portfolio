@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { diaryHeroVideo, diaryImages, diaryMusic, diaryVideos } from "@/lib/diary-data";
 
 const AUDIO_START_TIME = 0.06;
+const AUDIO_VOLUME = 0.8;
 
 function seekToStart(audio: HTMLAudioElement) {
   try {
@@ -32,7 +33,7 @@ export function TravelDiary() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.24;
+    audio.volume = AUDIO_VOLUME;
     seekToStart(audio);
 
     const play = async () => {
@@ -48,6 +49,8 @@ export function TravelDiary() {
     };
 
     void play();
+    window.addEventListener("pageshow", play);
+    window.addEventListener("load", play);
     window.addEventListener("pointerdown", play, { once: true });
     window.addEventListener("pointermove", play, { once: true });
     window.addEventListener("touchstart", play, { once: true });
@@ -55,8 +58,18 @@ export function TravelDiary() {
     window.addEventListener("keydown", play, { once: true });
     window.addEventListener("focus", play);
     document.addEventListener("visibilitychange", play);
+    const earlyRetry = window.setInterval(() => {
+      if (!audio.paused) {
+        window.clearInterval(earlyRetry);
+        return;
+      }
+      void play();
+    }, 900);
 
     return () => {
+      window.clearInterval(earlyRetry);
+      window.removeEventListener("pageshow", play);
+      window.removeEventListener("load", play);
       window.removeEventListener("pointerdown", play);
       window.removeEventListener("pointermove", play);
       window.removeEventListener("touchstart", play);

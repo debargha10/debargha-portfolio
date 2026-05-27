@@ -4,6 +4,7 @@ import { Music2, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const AUDIO_START_TIME = 0.06;
+const AUDIO_VOLUME = 0.8;
 
 function seekToStart(audio: HTMLAudioElement) {
   try {
@@ -24,7 +25,7 @@ export function BackgroundAudio() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.22;
+    audio.volume = AUDIO_VOLUME;
     seekToStart(audio);
 
     try {
@@ -54,7 +55,12 @@ export function BackgroundAudio() {
       if (!audioRef.current?.paused) return;
       void playAudio();
     };
+    const eagerPlay = () => {
+      void playAudio();
+    };
 
+    window.addEventListener("pageshow", eagerPlay);
+    window.addEventListener("load", eagerPlay);
     window.addEventListener("pointerdown", unlockAudio);
     window.addEventListener("pointermove", unlockAudio, { once: true });
     window.addEventListener("touchstart", unlockAudio, { once: true });
@@ -62,8 +68,18 @@ export function BackgroundAudio() {
     window.addEventListener("keydown", unlockAudio);
     window.addEventListener("focus", retryAudio);
     document.addEventListener("visibilitychange", retryAudio);
+    const earlyRetry = window.setInterval(() => {
+      if (!audioRef.current?.paused) {
+        window.clearInterval(earlyRetry);
+        return;
+      }
+      void playAudio();
+    }, 900);
 
     return () => {
+      window.clearInterval(earlyRetry);
+      window.removeEventListener("pageshow", eagerPlay);
+      window.removeEventListener("load", eagerPlay);
       window.removeEventListener("pointerdown", unlockAudio);
       window.removeEventListener("pointermove", unlockAudio);
       window.removeEventListener("touchstart", unlockAudio);
@@ -82,7 +98,7 @@ export function BackgroundAudio() {
 
     if (audio) {
       audio.muted = nextMuted;
-      audio.volume = 0.22;
+      audio.volume = AUDIO_VOLUME;
       if (!nextMuted) {
         void audio.play().then(() => setIsPlaying(true));
       }
