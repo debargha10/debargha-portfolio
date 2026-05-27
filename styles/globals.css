@@ -340,6 +340,42 @@ textarea {
     0 0 90px rgba(126, 91, 255, 0.11);
 }
 
+.music-control {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 85;
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.intro-name {
+  color: #ffffff;
+  font-size: clamp(2.25rem, 9vw, 7.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: 0.12em;
+}
+
+.intro-starfield {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(69, 163, 255, 0.22), transparent 24rem),
+    radial-gradient(circle at 40% 42%, rgba(255, 255, 255, 0.75) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 64% 54%, rgba(122, 188, 255, 0.75) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 24% 70%, rgba(181, 132, 255, 0.6) 0 1px, transparent 1.8px);
+  background-size: 100% 100%, 90px 90px, 140px 140px, 210px 210px;
+  animation: starfieldDrift 24s linear infinite;
+  opacity: 0.95;
+}
+
 @keyframes lineSweep {
   0%,
   100% {
