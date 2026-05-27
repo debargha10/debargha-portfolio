@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/section-heading";
 import { experience } from "@/lib/data";
@@ -30,16 +31,7 @@ export function Experience() {
                 <div className="absolute left-0 top-6 z-10 grid size-10 place-items-center rounded-full border border-electric/40 bg-ink text-electric md:left-1/2 md:-translate-x-1/2">
                   <Icon size={18} />
                 </div>
-                <motion.article
-                  whileHover={{ y: -6 }}
-                  className="glass ml-16 w-[calc(100%-4rem)] rounded-3xl p-6 md:ml-0 md:w-[45%]"
-                >
-                  <p className="text-xs uppercase tracking-[0.25em] text-electric">
-                    0{index + 1}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-semibold text-white">{item.title}</h3>
-                  <p className="mt-4 leading-7 text-titanium">{item.body}</p>
-                </motion.article>
+                <ExperienceCard item={item} index={index} />
               </motion.div>
             );
           })}
@@ -47,4 +39,40 @@ export function Experience() {
       </div>
     </section>
   );
+}
+
+function ExperienceCard({
+  item,
+  index,
+}: {
+  item: (typeof experience)[number];
+  index: number;
+}) {
+  const content = (
+    <motion.article
+      whileHover={{ y: -6 }}
+      className="glass group relative ml-16 w-[calc(100%-4rem)] overflow-hidden rounded-3xl p-6 md:ml-0 md:w-[45%]"
+    >
+      <p className="text-xs uppercase tracking-[0.25em] text-electric">
+        0{index + 1}
+      </p>
+      <h3 className="mt-3 text-2xl font-semibold text-white">{item.title}</h3>
+      <p className="mt-4 leading-7 text-titanium">{item.body}</p>
+      {"prompt" in item && item.prompt ? (
+        <div className="tap-explore-pop">
+          {item.prompt}
+        </div>
+      ) : null}
+    </motion.article>
+  );
+
+  if ("href" in item && item.href) {
+    return (
+      <Link href={item.href} className="contents" aria-label="Open travel diary">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 }

@@ -6,7 +6,7 @@ import { Footer } from "@/components/sections/footer";
 import { Hero } from "@/components/sections/hero";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
-import { Testimonials } from "@/components/sections/testimonials";
+import { MyDiary } from "@/components/sections/my-diary";
 import { ClientShell } from "@/components/client-shell";
 import { Navbar } from "@/components/navbar";
 
@@ -21,7 +21,7 @@ export default function Home() {
         <Projects />
         <Experience />
         <Achievements />
-        <Testimonials />
+        <MyDiary />
         <Contact />
       </main>
       <Footer />

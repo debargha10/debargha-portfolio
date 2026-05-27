@@ -1,0 +1,182 @@
+"use client";
+
+/* eslint-disable @next/next/no-img-element */
+
+import Link from "next/link";
+import { ArrowLeft, Play, Volume2, VolumeX, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { diaryHeroVideo, diaryImages, diaryMusic, diaryVideos } from "@/lib/diary-data";
+
+export function TravelDiary() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [muted, setMuted] = useState(false);
+  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.24;
+    audio.muted = muted;
+
+    const play = () => {
+      void audio.play().catch(() => undefined);
+    };
+
+    play();
+    window.addEventListener("pointerdown", play, { once: true });
+    window.addEventListener("keydown", play, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", play);
+      window.removeEventListener("keydown", play);
+    };
+  }, [muted]);
+
+  useEffect(() => {
+    Object.entries(videoRefs.current).forEach(([src, video]) => {
+      if (!video) return;
+      if (hoveredVideo && hoveredVideo !== src) {
+        video.pause();
+      } else {
+        void video.play().catch(() => undefined);
+      }
+    });
+  }, [hoveredVideo]);
+
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    const nextMuted = !muted;
+    setMuted(nextMuted);
+    if (audio) {
+      audio.muted = nextMuted;
+      if (!nextMuted) void audio.play().catch(() => undefined);
+    }
+  };
+
+  return (
+    <main className="diary-page min-h-screen overflow-hidden bg-black text-white">
+      <audio ref={audioRef} src={diaryMusic} loop autoPlay preload="auto" playsInline />
+      <video
+        className="diary-background-video"
+        src={diaryHeroVideo}
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
+      <div className="diary-background-shuffle" aria-hidden="true">
+        {diaryImages.slice(0, 8).map((image, index) => (
+          <img
+            key={image.src}
+            src={image.src}
+            alt=""
+            style={{ animationDelay: `${index * 1.2}s` }}
+          />
+        ))}
+      </div>
+      <div className="relative z-10">
+        <header className="fixed left-0 right-0 top-0 z-40 px-4 py-4">
+          <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-2xl">
+            <Link href="/#diary" className="inline-flex items-center gap-2 text-sm text-white">
+              <ArrowLeft size={17} />
+              Portfolio
+            </Link>
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="cosmic-key inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-sm"
+            >
+              {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
+              {muted ? "Muted" : "Music"}
+            </button>
+          </div>
+        </header>
+
+        <section className="relative flex min-h-screen items-end px-5 pb-16 pt-28">
+          <div className="mx-auto w-full max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-3xl"
+            >
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.38em] text-electric">
+                My Diary
+              </p>
+              <h1 className="text-6xl font-semibold leading-none md:text-8xl">
+                exploring the new
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
+                A dim-dark gallery of travel frames, looping moments, and moving memories.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="px-5 pb-24">
+          <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
+            {diaryVideos.map((video) => (
+              <article
+                key={video.src}
+                className="diary-video-card group"
+                onMouseEnter={() => setHoveredVideo(video.src)}
+                onMouseLeave={() => setHoveredVideo(null)}
+              >
+                <video
+                  ref={(node) => {
+                    videoRefs.current[video.src] = node;
+                  }}
+                  src={video.src}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+                <div className="diary-card-label">
+                  <Play size={16} />
+                  play
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="px-5 pb-28">
+          <div className="mx-auto max-w-7xl">
+            <div className="diary-gallery-grid">
+              {diaryImages.map((image, index) => (
+                <button
+                  type="button"
+                  key={image.src}
+                  onClick={() => setSelectedImage(image.src)}
+                  className={`diary-image-card ${index % 5 === 0 ? "md:row-span-2" : ""}`}
+                >
+                  <img src={image.src} alt={image.alt} />
+                  <span>View</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {selectedImage ? (
+        <div className="diary-lightbox" role="dialog" aria-modal="true">
+          <button
+            type="button"
+            onClick={() => setSelectedImage(null)}
+            className="cosmic-key absolute right-5 top-5 grid size-11 place-items-center rounded-full"
+            aria-label="Close image"
+          >
+            <X size={18} />
+          </button>
+          <img src={selectedImage} alt="Expanded travel diary frame" />
+        </div>
+      ) : null}
+    </main>
+  );
+}

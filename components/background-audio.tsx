@@ -60,7 +60,7 @@ export function BackgroundAudio() {
 
   return (
     <>
-      <audio ref={audioRef} src="/soft.mp3" loop preload="auto" playsInline />
+      <audio ref={audioRef} src="/soft.mp3" loop autoPlay preload="auto" playsInline />
       <button
         type="button"
         onClick={toggleMute}

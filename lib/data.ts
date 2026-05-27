@@ -9,6 +9,7 @@ import {
   GitBranch,
   LineChart,
   Mail,
+  Map,
   Megaphone,
   Package,
   Rocket,
@@ -117,6 +118,13 @@ export const experience = [
     title: "Automation Developer",
     body: "Designed workflow automation, API integrations, and repeatable systems that reduce manual effort.",
     icon: Workflow,
+  },
+  {
+    title: "Travelling",
+    body: "exploring the new",
+    icon: Map,
+    href: "/diary",
+    prompt: "tap to explore",
   },
 ];
 
