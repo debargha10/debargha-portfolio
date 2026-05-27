@@ -499,8 +499,7 @@ textarea {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18) 42%, #020309 100%),
-    radial-gradient(circle at 50% 80%, transparent, rgba(0, 0, 0, 0.36));
+    linear-gradient(to bottom, transparent 0, transparent 58%, rgba(2, 3, 9, 0.58) 82%, #020309 100%);
   pointer-events: none;
 }
 
@@ -517,8 +516,30 @@ textarea {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.8;
-  filter: brightness(0.62) saturate(1.08);
+  opacity: 1;
+  filter: none;
+}
+
+.diary-hero-copy {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 2rem;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.045)),
+    radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.22), transparent 34%);
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 28px 90px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(26px) saturate(1.45);
+}
+
+.diary-hero-copy h1 {
+  color: rgba(255, 255, 255, 0.76);
+  text-shadow: 0 8px 36px rgba(0, 0, 0, 0.5);
+}
+
+.diary-hero-copy p {
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .diary-lower-stage {

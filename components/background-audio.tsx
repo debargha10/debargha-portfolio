@@ -13,10 +13,13 @@ export function BackgroundAudio() {
     if (!audio) return;
 
     audio.volume = 0.22;
-    audio.muted = muted;
 
     try {
+      audio.muted = true;
       await audio.play();
+      window.setTimeout(() => {
+        audio.muted = muted;
+      }, 250);
       setIsPlaying(true);
     } catch {
       setIsPlaying(false);
@@ -31,13 +34,21 @@ export function BackgroundAudio() {
       window.removeEventListener("pointerdown", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
     };
+    const retryAudio = () => {
+      if (!audioRef.current?.paused) return;
+      void playAudio();
+    };
 
     window.addEventListener("pointerdown", unlockAudio);
     window.addEventListener("keydown", unlockAudio);
+    window.addEventListener("focus", retryAudio);
+    document.addEventListener("visibilitychange", retryAudio);
 
     return () => {
       window.removeEventListener("pointerdown", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
+      window.removeEventListener("focus", retryAudio);
+      document.removeEventListener("visibilitychange", retryAudio);
     };
   }, [playAudio]);
 
@@ -60,7 +71,15 @@ export function BackgroundAudio() {
 
   return (
     <>
-      <audio ref={audioRef} src="/soft.mp3" loop autoPlay preload="auto" playsInline />
+      <audio
+        ref={audioRef}
+        src="/soft.mp3"
+        loop
+        autoPlay
+        muted={false}
+        preload="auto"
+        playsInline
+      />
       <button
         type="button"
         onClick={toggleMute}

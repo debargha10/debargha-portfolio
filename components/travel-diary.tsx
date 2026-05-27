@@ -22,19 +22,30 @@ export function TravelDiary() {
     if (!audio) return;
 
     audio.volume = 0.24;
-    audio.muted = muted;
 
-    const play = () => {
-      void audio.play().catch(() => undefined);
+    const play = async () => {
+      try {
+        audio.muted = true;
+        await audio.play();
+        window.setTimeout(() => {
+          audio.muted = muted;
+        }, 250);
+      } catch {
+        audio.muted = muted;
+      }
     };
 
-    play();
+    void play();
     window.addEventListener("pointerdown", play, { once: true });
     window.addEventListener("keydown", play, { once: true });
+    window.addEventListener("focus", play);
+    document.addEventListener("visibilitychange", play);
 
     return () => {
       window.removeEventListener("pointerdown", play);
       window.removeEventListener("keydown", play);
+      window.removeEventListener("focus", play);
+      document.removeEventListener("visibilitychange", play);
     };
   }, [muted]);
 
@@ -61,7 +72,15 @@ export function TravelDiary() {
 
   return (
     <main className="diary-page min-h-screen overflow-hidden bg-black text-white">
-      <audio ref={audioRef} src={diaryMusic} loop autoPlay preload="auto" playsInline />
+      <audio
+        ref={audioRef}
+        src={diaryMusic}
+        loop
+        autoPlay
+        muted={false}
+        preload="auto"
+        playsInline
+      />
       <div className="relative z-10">
         <header className="fixed left-0 right-0 top-0 z-40 px-4 py-4">
           <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-2xl">
@@ -95,7 +114,7 @@ export function TravelDiary() {
               initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-3xl"
+              className="diary-hero-copy max-w-3xl"
             >
               <p className="mb-5 text-xs font-semibold uppercase tracking-[0.38em] text-electric">
                 My Diary
