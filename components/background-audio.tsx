@@ -21,7 +21,7 @@ export function BackgroundAudio() {
   const [muted, setMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const playAudio = useCallback(async () => {
+  const playAudio = useCallback(async (userGesture = false) => {
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -29,11 +29,13 @@ export function BackgroundAudio() {
     seekToStart(audio);
 
     try {
-      audio.muted = true;
+      audio.muted = userGesture ? muted : true;
       await audio.play();
-      window.setTimeout(() => {
-        audio.muted = muted;
-      }, 250);
+      if (!userGesture) {
+        window.setTimeout(() => {
+          audio.muted = muted;
+        }, 250);
+      }
       setIsPlaying(true);
     } catch {
       setIsPlaying(false);
@@ -44,11 +46,10 @@ export function BackgroundAudio() {
     void playAudio();
 
     const unlockAudio = () => {
-      void playAudio();
+      void playAudio(true);
       window.removeEventListener("pointerdown", unlockAudio);
-      window.removeEventListener("pointermove", unlockAudio);
       window.removeEventListener("touchstart", unlockAudio);
-      window.removeEventListener("scroll", unlockAudio);
+      window.removeEventListener("click", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
     };
     const retryAudio = () => {
@@ -62,9 +63,8 @@ export function BackgroundAudio() {
     window.addEventListener("pageshow", eagerPlay);
     window.addEventListener("load", eagerPlay);
     window.addEventListener("pointerdown", unlockAudio);
-    window.addEventListener("pointermove", unlockAudio, { once: true });
     window.addEventListener("touchstart", unlockAudio, { once: true });
-    window.addEventListener("scroll", unlockAudio, { once: true });
+    window.addEventListener("click", unlockAudio, { once: true });
     window.addEventListener("keydown", unlockAudio);
     window.addEventListener("focus", retryAudio);
     document.addEventListener("visibilitychange", retryAudio);
@@ -81,9 +81,8 @@ export function BackgroundAudio() {
       window.removeEventListener("pageshow", eagerPlay);
       window.removeEventListener("load", eagerPlay);
       window.removeEventListener("pointerdown", unlockAudio);
-      window.removeEventListener("pointermove", unlockAudio);
       window.removeEventListener("touchstart", unlockAudio);
-      window.removeEventListener("scroll", unlockAudio);
+      window.removeEventListener("click", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
       window.removeEventListener("focus", retryAudio);
       document.removeEventListener("visibilitychange", retryAudio);
@@ -92,6 +91,17 @@ export function BackgroundAudio() {
 
   const toggleMute = () => {
     const audio = audioRef.current;
+
+    if (!audio || !isPlaying || audio.paused || audio.muted) {
+      setMuted(false);
+      if (audio) {
+        audio.muted = false;
+        audio.volume = AUDIO_VOLUME;
+      }
+      void playAudio(true);
+      return;
+    }
+
     const nextMuted = !muted;
 
     setMuted(nextMuted);

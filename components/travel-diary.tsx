@@ -36,28 +36,40 @@ export function TravelDiary() {
     audio.volume = AUDIO_VOLUME;
     seekToStart(audio);
 
-    const play = async () => {
+    const play = async (userGesture = false) => {
       try {
-        audio.muted = true;
+        audio.muted = !userGesture;
         await audio.play();
-        window.setTimeout(() => {
-          audio.muted = false;
-        }, 250);
+        if (!userGesture) {
+          window.setTimeout(() => {
+            audio.muted = false;
+          }, 250);
+        }
       } catch {
         audio.muted = false;
       }
     };
 
     void play();
-    window.addEventListener("pageshow", play);
-    window.addEventListener("load", play);
-    window.addEventListener("pointerdown", play, { once: true });
-    window.addEventListener("pointermove", play, { once: true });
-    window.addEventListener("touchstart", play, { once: true });
-    window.addEventListener("scroll", play, { once: true });
-    window.addEventListener("keydown", play, { once: true });
-    window.addEventListener("focus", play);
-    document.addEventListener("visibilitychange", play);
+    const unlockAudio = () => {
+      void play(true);
+      window.removeEventListener("pointerdown", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+    };
+    const retryPlay = () => {
+      void play();
+    };
+
+    window.addEventListener("pageshow", retryPlay);
+    window.addEventListener("load", retryPlay);
+    window.addEventListener("pointerdown", unlockAudio);
+    window.addEventListener("touchstart", unlockAudio, { once: true });
+    window.addEventListener("click", unlockAudio, { once: true });
+    window.addEventListener("keydown", unlockAudio);
+    window.addEventListener("focus", retryPlay);
+    document.addEventListener("visibilitychange", retryPlay);
     const earlyRetry = window.setInterval(() => {
       if (!audio.paused) {
         window.clearInterval(earlyRetry);
@@ -68,15 +80,14 @@ export function TravelDiary() {
 
     return () => {
       window.clearInterval(earlyRetry);
-      window.removeEventListener("pageshow", play);
-      window.removeEventListener("load", play);
-      window.removeEventListener("pointerdown", play);
-      window.removeEventListener("pointermove", play);
-      window.removeEventListener("touchstart", play);
-      window.removeEventListener("scroll", play);
-      window.removeEventListener("keydown", play);
-      window.removeEventListener("focus", play);
-      document.removeEventListener("visibilitychange", play);
+      window.removeEventListener("pageshow", retryPlay);
+      window.removeEventListener("load", retryPlay);
+      window.removeEventListener("pointerdown", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+      window.removeEventListener("focus", retryPlay);
+      document.removeEventListener("visibilitychange", retryPlay);
     };
   }, []);
 
