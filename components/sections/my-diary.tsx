@@ -2,12 +2,12 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import Link from "next/link";
 import { ArrowUpRight, Images } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/section-heading";
 import { diaryImages } from "@/lib/diary-data";
 import { reveal } from "@/lib/motion";
+import { DiaryTransitionLink } from "@/components/diary-transition-link";
 
 const previewImages = diaryImages.slice(0, 6);
 
@@ -28,10 +28,9 @@ export function MyDiary() {
           viewport={{ once: true, margin: "-120px" }}
           className="mx-auto max-w-4xl"
         >
-          <Link
-            href="/diary"
-            className="group glass relative block min-h-[360px] overflow-hidden rounded-[2rem] p-5"
-            aria-label="Open My Diary travel gallery"
+          <DiaryTransitionLink
+            className="group glass relative block w-full min-h-[360px] overflow-hidden rounded-[2rem] p-5 text-left"
+            ariaLabel="Open My Diary travel gallery"
           >
             <div className="absolute inset-0 bg-black/30" />
             <div className="diary-preview-grid absolute inset-4">
@@ -40,6 +39,8 @@ export function MyDiary() {
                   key={image.src}
                   src={image.src}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="diary-preview-image"
                   style={{ animationDelay: `${index * 0.7}s` }}
                 />
@@ -61,7 +62,7 @@ export function MyDiary() {
                 </div>
               </div>
             </div>
-          </Link>
+          </DiaryTransitionLink>
         </motion.div>
       </div>
     </section>

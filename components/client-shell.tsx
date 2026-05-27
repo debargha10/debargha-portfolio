@@ -13,7 +13,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
   useLenis();
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => setLoading(false), 2500);
+    const timeout = window.setTimeout(() => setLoading(false), 1900);
     return () => window.clearTimeout(timeout);
   }, []);
 
@@ -27,6 +27,10 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="intro-starfield" aria-hidden="true" />
+            <div className="cosmic-loader" aria-hidden="true">
+              <span />
+              <span />
+            </div>
             <motion.div
               initial={{ opacity: 0, y: 24, scale: 0.94, filter: "blur(18px)" }}
               animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}

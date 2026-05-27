@@ -376,6 +376,47 @@ textarea {
   opacity: 0.95;
 }
 
+.cosmic-loader {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 4.8rem);
+  width: 4.25rem;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.cosmic-loader::before,
+.cosmic-loader::after,
+.cosmic-loader span {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(136, 199, 255, 0.28);
+  box-shadow: 0 0 24px rgba(69, 163, 255, 0.2);
+}
+
+.cosmic-loader::before {
+  animation: loaderOrbit 1.8s linear infinite;
+}
+
+.cosmic-loader::after {
+  inset: 1.25rem;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.92), rgba(69, 163, 255, 0.1) 58%, transparent);
+  border: 0;
+  animation: loaderPulse 1.8s ease-in-out infinite;
+}
+
+.cosmic-loader span:first-child {
+  transform: rotateX(64deg);
+  animation: loaderOrbit 2.4s linear infinite reverse;
+}
+
+.cosmic-loader span:last-child {
+  transform: rotateY(64deg);
+  animation: loaderOrbit 2s linear infinite;
+}
+
 .tap-explore-pop {
   position: absolute;
   right: 1.1rem;
@@ -392,6 +433,42 @@ textarea {
   box-shadow: 0 0 28px rgba(69, 163, 255, 0.18);
   backdrop-filter: blur(16px);
   animation: tapExplorePulse 2.2s ease-in-out infinite;
+}
+
+.diary-open-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(69, 163, 255, 0.24), transparent 22rem),
+    rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(20px);
+  animation: diaryPortalFade 0.74s ease forwards;
+}
+
+.diary-open-portal {
+  display: grid;
+  place-items: center;
+  gap: 1.2rem;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.diary-open-portal span {
+  width: min(52vw, 20rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle, transparent 30%, rgba(69, 163, 255, 0.3) 31%, rgba(126, 91, 255, 0.05) 62%, transparent 68%),
+    conic-gradient(from 120deg, transparent, rgba(255, 255, 255, 0.92), transparent, rgba(69, 163, 255, 0.62), transparent);
+  filter: drop-shadow(0 0 42px rgba(69, 163, 255, 0.42));
+  animation: diaryPortalOpen 0.74s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes tapExplorePulse {
@@ -412,45 +489,65 @@ textarea {
   isolation: isolate;
 }
 
-.diary-background-video {
-  position: fixed;
+.diary-hero-stage {
+  background: #03040a;
+}
+
+.diary-hero-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18) 42%, #020309 100%),
+    radial-gradient(circle at 50% 80%, transparent, rgba(0, 0, 0, 0.36));
+  pointer-events: none;
+}
+
+.diary-hero-stage > div {
+  position: relative;
+  z-index: 2;
+}
+
+.diary-hero-video {
+  position: absolute;
   inset: 0;
   z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.34;
-  filter: brightness(0.42) saturate(1.1) blur(1px);
+  object-position: center;
+  opacity: 0.8;
+  filter: brightness(0.62) saturate(1.08);
 }
 
-.diary-background-shuffle {
+.diary-lower-stage {
+  min-height: 100vh;
+  background: #020309;
+}
+
+.diary-lower-background-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.36;
+  filter: brightness(0.38) saturate(1.18) blur(1px);
+  mask-image: linear-gradient(to bottom, transparent 0, black 12rem, black 100%);
+}
+
+.diary-lower-mask {
   pointer-events: none;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 1;
-  overflow: hidden;
-  background: radial-gradient(circle at 50% 18%, rgba(69, 163, 255, 0.16), transparent 34rem);
+  background:
+    linear-gradient(to bottom, #020309 0, transparent 12rem, rgba(0, 0, 0, 0.18) 100%),
+    radial-gradient(circle at 50% 18%, rgba(69, 163, 255, 0.12), transparent 32rem);
 }
-
-.diary-background-shuffle img {
-  position: absolute;
-  width: 22rem;
-  height: 30rem;
-  object-fit: cover;
-  border-radius: 1.4rem;
-  opacity: 0;
-  filter: brightness(0.42) blur(2px);
-  animation: diaryShuffle 18s ease-in-out infinite;
-}
-
-.diary-background-shuffle img:nth-child(1) { left: 4%; top: 14%; }
-.diary-background-shuffle img:nth-child(2) { left: 66%; top: 8%; }
-.diary-background-shuffle img:nth-child(3) { left: 36%; top: 48%; }
-.diary-background-shuffle img:nth-child(4) { left: 78%; top: 54%; }
-.diary-background-shuffle img:nth-child(5) { left: 12%; top: 62%; }
-.diary-background-shuffle img:nth-child(6) { left: 44%; top: 4%; }
-.diary-background-shuffle img:nth-child(7) { left: 26%; top: 22%; }
-.diary-background-shuffle img:nth-child(8) { left: 58%; top: 68%; }
 
 .diary-preview-grid {
   display: grid;
@@ -559,26 +656,17 @@ textarea {
   box-shadow: 0 32px 140px rgba(0, 0, 0, 0.66);
 }
 
+.diary-lightbox-video {
+  width: min(92vw, 72rem);
+  max-height: 86vh;
+  border-radius: 1.4rem;
+  background: black;
+  box-shadow: 0 32px 140px rgba(0, 0, 0, 0.66);
+}
+
 @media (min-width: 768px) {
   .diary-gallery-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@keyframes diaryShuffle {
-  0%,
-  100% {
-    opacity: 0;
-    transform: translate3d(0, 26px, 0) scale(0.94);
-  }
-  18%,
-  48% {
-    opacity: 0.3;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  68% {
-    opacity: 0;
-    transform: translate3d(0, -24px, 0) scale(1.04);
   }
 }
 
@@ -591,6 +679,46 @@ textarea {
   50% {
     opacity: 0.9;
     transform: scale(1);
+  }
+}
+
+@keyframes loaderOrbit {
+  to {
+    transform: rotateZ(360deg) rotateX(64deg);
+  }
+}
+
+@keyframes loaderPulse {
+  0%,
+  100% {
+    opacity: 0.52;
+    transform: scale(0.88);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes diaryPortalOpen {
+  0% {
+    transform: scale(0.12) rotate(0deg);
+    filter: blur(14px);
+    opacity: 0.42;
+  }
+  100% {
+    transform: scale(1.26) rotate(220deg);
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes diaryPortalFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 

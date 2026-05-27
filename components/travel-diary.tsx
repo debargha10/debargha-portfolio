@@ -10,10 +10,12 @@ import { diaryHeroVideo, diaryImages, diaryMusic, diaryVideos } from "@/lib/diar
 
 export function TravelDiary() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  const lowerBackgroundVideo = diaryVideos[1]?.src ?? diaryVideos[0]?.src;
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -60,24 +62,6 @@ export function TravelDiary() {
   return (
     <main className="diary-page min-h-screen overflow-hidden bg-black text-white">
       <audio ref={audioRef} src={diaryMusic} loop autoPlay preload="auto" playsInline />
-      <video
-        className="diary-background-video"
-        src={diaryHeroVideo}
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
-      <div className="diary-background-shuffle" aria-hidden="true">
-        {diaryImages.slice(0, 8).map((image, index) => (
-          <img
-            key={image.src}
-            src={image.src}
-            alt=""
-            style={{ animationDelay: `${index * 1.2}s` }}
-          />
-        ))}
-      </div>
       <div className="relative z-10">
         <header className="fixed left-0 right-0 top-0 z-40 px-4 py-4">
           <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-2xl">
@@ -96,7 +80,16 @@ export function TravelDiary() {
           </div>
         </header>
 
-        <section className="relative flex min-h-screen items-end px-5 pb-16 pt-28">
+        <section className="diary-hero-stage relative flex min-h-screen items-end overflow-hidden px-5 pb-16 pt-28">
+          <video
+            className="diary-hero-video"
+            src={diaryHeroVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          />
           <div className="mx-auto w-full max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
@@ -117,12 +110,26 @@ export function TravelDiary() {
           </div>
         </section>
 
-        <section className="px-5 pb-24">
+        <div className="diary-lower-stage relative overflow-hidden">
+          <video
+            className="diary-lower-background-video"
+            src={lowerBackgroundVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+          <div className="diary-lower-mask" aria-hidden="true" />
+
+        <section className="relative z-10 px-5 pb-24 pt-24">
           <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
             {diaryVideos.map((video) => (
-              <article
+              <button
+                type="button"
                 key={video.src}
-                className="diary-video-card group"
+                className="diary-video-card group text-left"
+                onClick={() => setSelectedVideo(video.src)}
                 onMouseEnter={() => setHoveredVideo(video.src)}
                 onMouseLeave={() => setHoveredVideo(null)}
               >
@@ -135,17 +142,18 @@ export function TravelDiary() {
                   muted
                   loop
                   playsInline
+                  preload="metadata"
                 />
                 <div className="diary-card-label">
                   <Play size={16} />
                   play
                 </div>
-              </article>
+              </button>
             ))}
           </div>
         </section>
 
-        <section className="px-5 pb-28">
+        <section className="relative z-10 px-5 pb-28">
           <div className="mx-auto max-w-7xl">
             <div className="diary-gallery-grid">
               {diaryImages.map((image, index) => (
@@ -155,13 +163,14 @@ export function TravelDiary() {
                   onClick={() => setSelectedImage(image.src)}
                   className={`diary-image-card ${index % 5 === 0 ? "md:row-span-2" : ""}`}
                 >
-                  <img src={image.src} alt={image.alt} />
+                  <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
                   <span>View</span>
                 </button>
               ))}
             </div>
           </div>
         </section>
+        </div>
       </div>
 
       {selectedImage ? (
@@ -175,6 +184,25 @@ export function TravelDiary() {
             <X size={18} />
           </button>
           <img src={selectedImage} alt="Expanded travel diary frame" />
+        </div>
+      ) : null}
+      {selectedVideo ? (
+        <div className="diary-lightbox" role="dialog" aria-modal="true">
+          <button
+            type="button"
+            onClick={() => setSelectedVideo(null)}
+            className="cosmic-key absolute right-5 top-5 grid size-11 place-items-center rounded-full"
+            aria-label="Close video"
+          >
+            <X size={18} />
+          </button>
+          <video
+            src={selectedVideo}
+            controls
+            autoPlay
+            playsInline
+            className="diary-lightbox-video"
+          />
         </div>
       ) : null}
     </main>

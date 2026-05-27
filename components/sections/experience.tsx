@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/section-heading";
 import { experience } from "@/lib/data";
 import { reveal, stagger } from "@/lib/motion";
+import { DiaryTransitionLink } from "@/components/diary-transition-link";
 
 export function Experience() {
   return (
@@ -68,9 +68,9 @@ function ExperienceCard({
 
   if ("href" in item && item.href) {
     return (
-      <Link href={item.href} className="contents" aria-label="Open travel diary">
+      <DiaryTransitionLink className="contents" ariaLabel="Open travel diary">
         {content}
-      </Link>
+      </DiaryTransitionLink>
     );
   }
 
