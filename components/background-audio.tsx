@@ -3,6 +3,18 @@
 import { Music2, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+const AUDIO_START_TIME = 0.06;
+
+function seekToStart(audio: HTMLAudioElement) {
+  try {
+    if (audio.currentTime < AUDIO_START_TIME) {
+      audio.currentTime = AUDIO_START_TIME;
+    }
+  } catch {
+    // Some browsers only allow seeking after metadata is ready.
+  }
+}
+
 export function BackgroundAudio() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [muted, setMuted] = useState(false);
@@ -13,6 +25,7 @@ export function BackgroundAudio() {
     if (!audio) return;
 
     audio.volume = 0.22;
+    seekToStart(audio);
 
     try {
       audio.muted = true;
@@ -32,6 +45,9 @@ export function BackgroundAudio() {
     const unlockAudio = () => {
       void playAudio();
       window.removeEventListener("pointerdown", unlockAudio);
+      window.removeEventListener("pointermove", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("scroll", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
     };
     const retryAudio = () => {
@@ -40,12 +56,18 @@ export function BackgroundAudio() {
     };
 
     window.addEventListener("pointerdown", unlockAudio);
+    window.addEventListener("pointermove", unlockAudio, { once: true });
+    window.addEventListener("touchstart", unlockAudio, { once: true });
+    window.addEventListener("scroll", unlockAudio, { once: true });
     window.addEventListener("keydown", unlockAudio);
     window.addEventListener("focus", retryAudio);
     document.addEventListener("visibilitychange", retryAudio);
 
     return () => {
       window.removeEventListener("pointerdown", unlockAudio);
+      window.removeEventListener("pointermove", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("scroll", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
       window.removeEventListener("focus", retryAudio);
       document.removeEventListener("visibilitychange", retryAudio);
@@ -79,6 +101,10 @@ export function BackgroundAudio() {
         muted={false}
         preload="auto"
         playsInline
+        onLoadedMetadata={() => {
+          const audio = audioRef.current;
+          if (audio) seekToStart(audio);
+        }}
       />
       <button
         type="button"

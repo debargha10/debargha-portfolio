@@ -3,15 +3,26 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
-import { ArrowLeft, Play, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowLeft, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { diaryHeroVideo, diaryImages, diaryMusic, diaryVideos } from "@/lib/diary-data";
 
+const AUDIO_START_TIME = 0.06;
+
+function seekToStart(audio: HTMLAudioElement) {
+  try {
+    if (audio.currentTime < AUDIO_START_TIME) {
+      audio.currentTime = AUDIO_START_TIME;
+    }
+  } catch {
+    // Some browsers only allow seeking after metadata is ready.
+  }
+}
+
 export function TravelDiary() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [muted, setMuted] = useState(false);
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
@@ -22,32 +33,39 @@ export function TravelDiary() {
     if (!audio) return;
 
     audio.volume = 0.24;
+    seekToStart(audio);
 
     const play = async () => {
       try {
         audio.muted = true;
         await audio.play();
         window.setTimeout(() => {
-          audio.muted = muted;
+          audio.muted = false;
         }, 250);
       } catch {
-        audio.muted = muted;
+        audio.muted = false;
       }
     };
 
     void play();
     window.addEventListener("pointerdown", play, { once: true });
+    window.addEventListener("pointermove", play, { once: true });
+    window.addEventListener("touchstart", play, { once: true });
+    window.addEventListener("scroll", play, { once: true });
     window.addEventListener("keydown", play, { once: true });
     window.addEventListener("focus", play);
     document.addEventListener("visibilitychange", play);
 
     return () => {
       window.removeEventListener("pointerdown", play);
+      window.removeEventListener("pointermove", play);
+      window.removeEventListener("touchstart", play);
+      window.removeEventListener("scroll", play);
       window.removeEventListener("keydown", play);
       window.removeEventListener("focus", play);
       document.removeEventListener("visibilitychange", play);
     };
-  }, [muted]);
+  }, []);
 
   useEffect(() => {
     Object.entries(videoRefs.current).forEach(([src, video]) => {
@@ -60,16 +78,6 @@ export function TravelDiary() {
     });
   }, [hoveredVideo]);
 
-  const toggleMute = () => {
-    const audio = audioRef.current;
-    const nextMuted = !muted;
-    setMuted(nextMuted);
-    if (audio) {
-      audio.muted = nextMuted;
-      if (!nextMuted) void audio.play().catch(() => undefined);
-    }
-  };
-
   return (
     <main className="diary-page min-h-screen overflow-hidden bg-black text-white">
       <audio
@@ -80,24 +88,16 @@ export function TravelDiary() {
         muted={false}
         preload="auto"
         playsInline
+        onLoadedMetadata={() => {
+          const audio = audioRef.current;
+          if (audio) seekToStart(audio);
+        }}
       />
       <div className="relative z-10">
-        <header className="fixed left-0 right-0 top-0 z-40 px-4 py-4">
-          <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-2xl">
-            <Link href="/#diary" className="inline-flex items-center gap-2 text-sm text-white">
-              <ArrowLeft size={17} />
-              Portfolio
-            </Link>
-            <button
-              type="button"
-              onClick={toggleMute}
-              className="cosmic-key inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-sm"
-            >
-              {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
-              {muted ? "Muted" : "Music"}
-            </button>
-          </div>
-        </header>
+        <Link href="/#diary" className="diary-return-button">
+          <ArrowLeft size={17} />
+          Return
+        </Link>
 
         <section className="diary-hero-stage relative flex min-h-screen items-end overflow-hidden px-5 pb-16 pt-28">
           <video
