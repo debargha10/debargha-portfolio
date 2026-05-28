@@ -82,6 +82,11 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
       <ScrollProgress />
       <CursorGlow />
       <div className="relative z-10">{children}</div>
+      <div className="starfall-layer" aria-hidden="true">
+        {Array.from({ length: 18 }, (_, index) => (
+          <span key={index} />
+        ))}
+      </div>
     </>
   );
 }

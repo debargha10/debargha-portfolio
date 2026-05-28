@@ -122,6 +122,51 @@ textarea {
   animation-direction: reverse;
 }
 
+.starfall-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  overflow: hidden;
+  perspective: 900px;
+  opacity: 0.78;
+}
+
+.starfall-layer span {
+  position: absolute;
+  left: var(--fall-left);
+  top: -18vh;
+  width: var(--fall-width);
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.92), rgba(117, 190, 255, 0.38), transparent);
+  box-shadow: 0 0 12px rgba(117, 190, 255, 0.5);
+  filter: blur(var(--fall-blur));
+  opacity: 0;
+  transform: rotate(-28deg) translate3d(0, 0, var(--fall-depth));
+  animation: slowStarfall var(--fall-duration) linear infinite;
+  animation-delay: var(--fall-delay);
+}
+
+.starfall-layer span:nth-child(1) { --fall-left: 8%; --fall-width: 8rem; --fall-depth: 40px; --fall-blur: 0px; --fall-duration: 12s; --fall-delay: -1s; }
+.starfall-layer span:nth-child(2) { --fall-left: 19%; --fall-width: 12rem; --fall-depth: 80px; --fall-blur: 0.4px; --fall-duration: 15s; --fall-delay: -8s; }
+.starfall-layer span:nth-child(3) { --fall-left: 27%; --fall-width: 7rem; --fall-depth: -60px; --fall-blur: 0.7px; --fall-duration: 18s; --fall-delay: -4s; }
+.starfall-layer span:nth-child(4) { --fall-left: 34%; --fall-width: 10rem; --fall-depth: 120px; --fall-blur: 0.2px; --fall-duration: 14s; --fall-delay: -11s; }
+.starfall-layer span:nth-child(5) { --fall-left: 43%; --fall-width: 14rem; --fall-depth: 0px; --fall-blur: 0.5px; --fall-duration: 19s; --fall-delay: -6s; }
+.starfall-layer span:nth-child(6) { --fall-left: 51%; --fall-width: 9rem; --fall-depth: 90px; --fall-blur: 0px; --fall-duration: 13s; --fall-delay: -9s; }
+.starfall-layer span:nth-child(7) { --fall-left: 62%; --fall-width: 11rem; --fall-depth: -120px; --fall-blur: 0.8px; --fall-duration: 20s; --fall-delay: -3s; }
+.starfall-layer span:nth-child(8) { --fall-left: 72%; --fall-width: 8rem; --fall-depth: 60px; --fall-blur: 0.3px; --fall-duration: 16s; --fall-delay: -13s; }
+.starfall-layer span:nth-child(9) { --fall-left: 84%; --fall-width: 13rem; --fall-depth: 150px; --fall-blur: 0.2px; --fall-duration: 17s; --fall-delay: -5s; }
+.starfall-layer span:nth-child(10) { --fall-left: 92%; --fall-width: 7rem; --fall-depth: -40px; --fall-blur: 0.7px; --fall-duration: 21s; --fall-delay: -15s; }
+.starfall-layer span:nth-child(11) { --fall-left: 4%; --fall-width: 10rem; --fall-depth: 20px; --fall-blur: 0.5px; --fall-duration: 18s; --fall-delay: -16s; }
+.starfall-layer span:nth-child(12) { --fall-left: 15%; --fall-width: 6rem; --fall-depth: 110px; --fall-blur: 0.2px; --fall-duration: 22s; --fall-delay: -7s; }
+.starfall-layer span:nth-child(13) { --fall-left: 39%; --fall-width: 8rem; --fall-depth: -90px; --fall-blur: 0.8px; --fall-duration: 19s; --fall-delay: -18s; }
+.starfall-layer span:nth-child(14) { --fall-left: 58%; --fall-width: 12rem; --fall-depth: 130px; --fall-blur: 0px; --fall-duration: 14s; --fall-delay: -2s; }
+.starfall-layer span:nth-child(15) { --fall-left: 67%; --fall-width: 7rem; --fall-depth: 30px; --fall-blur: 0.4px; --fall-duration: 20s; --fall-delay: -12s; }
+.starfall-layer span:nth-child(16) { --fall-left: 78%; --fall-width: 9rem; --fall-depth: -30px; --fall-blur: 0.6px; --fall-duration: 23s; --fall-delay: -10s; }
+.starfall-layer span:nth-child(17) { --fall-left: 88%; --fall-width: 11rem; --fall-depth: 70px; --fall-blur: 0.2px; --fall-duration: 16s; --fall-delay: -19s; }
+.starfall-layer span:nth-child(18) { --fall-left: 96%; --fall-width: 6rem; --fall-depth: -140px; --fall-blur: 0.9px; --fall-duration: 24s; --fall-delay: -6s; }
+
 .solar-system {
   position: absolute;
   right: clamp(-9rem, -4vw, 2rem);
@@ -942,6 +987,23 @@ textarea {
   82% {
     opacity: 0;
     transform: rotate(-28deg) translate3d(-48rem, 24rem, 0);
+  }
+}
+
+@keyframes slowStarfall {
+  0% {
+    opacity: 0;
+    transform: rotate(-28deg) translate3d(28vw, -18vh, var(--fall-depth));
+  }
+  12% {
+    opacity: 0.82;
+  }
+  72% {
+    opacity: 0.58;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-28deg) translate3d(-42vw, 118vh, var(--fall-depth));
   }
 }
 

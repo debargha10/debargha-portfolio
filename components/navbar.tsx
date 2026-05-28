@@ -11,16 +11,36 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const { isScrolled } = useScrollPercent();
   const lastScrollY = useRef(0);
+  const hideTimer = useRef<number | null>(null);
 
   useEffect(() => {
+    const clearHideTimer = () => {
+      if (hideTimer.current) {
+        window.clearTimeout(hideTimer.current);
+        hideTimer.current = null;
+      }
+    };
+
     const handleScroll = () => {
       const currentY = window.scrollY;
       const scrollingDown = currentY > lastScrollY.current;
+      const scrollingUp = currentY < lastScrollY.current;
 
       if (currentY < 80 || open) {
+        clearHideTimer();
         setHidden(false);
       } else if (Math.abs(currentY - lastScrollY.current) > 8) {
-        setHidden(scrollingDown);
+        if (scrollingDown) {
+          clearHideTimer();
+          setHidden(true);
+        }
+        if (scrollingUp) {
+          setHidden(false);
+          clearHideTimer();
+          hideTimer.current = window.setTimeout(() => {
+            if (window.scrollY >= 80) setHidden(true);
+          }, 5000);
+        }
       }
 
       lastScrollY.current = currentY;
@@ -28,7 +48,10 @@ export function Navbar() {
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      clearHideTimer();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [open]);
 
   return (
