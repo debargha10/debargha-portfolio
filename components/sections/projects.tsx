@@ -81,7 +81,7 @@ export function Projects() {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.06] px-5 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
+                      className="premium-glow-button inline-flex min-h-11 items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.06] px-5 text-sm font-semibold text-white transition hover:bg-white/[0.12]"
                     >
                       <Github size={16} />
                       GitHub

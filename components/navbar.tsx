@@ -101,7 +101,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/5 text-white md:hidden"
+          className="premium-glow-button grid size-9 place-items-center rounded-full border border-white/10 bg-white/5 text-white md:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
         >

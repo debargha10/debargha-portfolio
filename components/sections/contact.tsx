@@ -71,7 +71,7 @@ export function Contact() {
                   href={social.href}
                   target={social.href.startsWith("mailto:") ? undefined : "_blank"}
                   rel={social.href.startsWith("mailto:") ? undefined : "noreferrer"}
-                  className="group inline-flex size-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-titanium transition hover:border-electric/50 hover:text-white"
+                  className="premium-glow-button group inline-flex size-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-titanium transition hover:border-electric/50 hover:text-white"
                   aria-label={social.label}
                 >
                   <Icon size={18} />

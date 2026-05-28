@@ -26,7 +26,7 @@ export function DiaryTransitionLink({
       <button
         type="button"
         onClick={openDiary}
-        className={className}
+        className={`premium-glow-button ${className ?? ""}`}
         aria-label={ariaLabel ?? "Open My Diary"}
       >
         {children}

@@ -360,6 +360,103 @@ textarea {
   animation: controlGlow 5.5s ease-in-out infinite;
 }
 
+.premium-glow-button,
+.cosmic-key,
+.diary-return-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: rgba(196, 224, 255, 0.2);
+  translate: 0 0;
+  scale: 1;
+  transition:
+    border-color 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease,
+    color 0.35s ease,
+    opacity 0.35s ease,
+    translate 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.premium-glow-button::before,
+.premium-glow-button::after,
+.cosmic-key::before,
+.cosmic-key::after,
+.diary-return-button::before,
+.diary-return-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(124, 190, 255, 0.7),
+    rgba(255, 255, 255, 0.86),
+    rgba(139, 112, 255, 0.52),
+    rgba(255, 255, 255, 0.14)
+  );
+  background-size: 260% 260%;
+  opacity: 0.52;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: premiumButtonBorder 7s linear infinite;
+}
+
+.premium-glow-button::after,
+.cosmic-key::after,
+.diary-return-button::after {
+  inset: -1px;
+  padding: 2px;
+  filter: blur(10px);
+  opacity: 0.24;
+}
+
+.premium-glow-button:hover,
+.cosmic-key:hover,
+.diary-return-button:hover {
+  border-color: rgba(196, 226, 255, 0.56);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 0 26px rgba(105, 178, 255, 0.22),
+    0 0 54px rgba(126, 91, 255, 0.12),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.premium-glow-button:hover::before,
+.premium-glow-button:hover::after,
+.cosmic-key:hover::before,
+.cosmic-key:hover::after,
+.diary-return-button:hover::before,
+.diary-return-button:hover::after {
+  opacity: 0.84;
+  animation-duration: 4.6s;
+}
+
+.premium-glow-button:active,
+.cosmic-key:active,
+.diary-return-button:active {
+  translate: 0 1px;
+  scale: 0.985;
+}
+
+.premium-glow-button:focus-visible,
+.cosmic-key:focus-visible,
+.diary-return-button:focus-visible {
+  outline: 2px solid rgba(203, 232, 255, 0.86);
+  outline-offset: 3px;
+}
+
 .cosmic-key {
   border: 1px solid rgba(255, 255, 255, 0.16);
   background:
@@ -723,6 +820,7 @@ textarea {
 .diary-video-card,
 .diary-image-card {
   position: relative;
+  isolation: isolate;
   min-height: 21rem;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -730,6 +828,70 @@ textarea {
   background: rgba(255, 255, 255, 0.035);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(20px);
+  scale: 1;
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    scale 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.diary-video-card::before,
+.diary-video-card::after,
+.diary-image-card::before,
+.diary-image-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(124, 190, 255, 0.52),
+    rgba(255, 255, 255, 0.62),
+    rgba(139, 112, 255, 0.42),
+    rgba(255, 255, 255, 0.12)
+  );
+  background-size: 260% 260%;
+  opacity: 0.42;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: premiumButtonBorder 8s linear infinite;
+}
+
+.diary-video-card::after,
+.diary-image-card::after {
+  inset: -1px;
+  padding: 2px;
+  filter: blur(12px);
+  opacity: 0.2;
+}
+
+.diary-video-card:hover,
+.diary-image-card:hover {
+  border-color: rgba(196, 226, 255, 0.44);
+  box-shadow:
+    0 0 30px rgba(105, 178, 255, 0.16),
+    0 28px 86px rgba(0, 0, 0, 0.4);
+}
+
+.diary-video-card:active,
+.diary-image-card:active {
+  scale: 0.992;
+}
+
+.diary-video-card:focus-visible,
+.diary-image-card:focus-visible {
+  outline: 2px solid rgba(203, 232, 255, 0.86);
+  outline-offset: 4px;
 }
 
 .diary-video-card video,
@@ -766,6 +928,7 @@ textarea {
   letter-spacing: 0.16em;
   opacity: 0;
   text-transform: uppercase;
+  z-index: 3;
   transform: translate(-50%, -50%) scale(0.82);
   transition: opacity 0.35s ease, transform 0.35s ease;
   backdrop-filter: blur(16px);
@@ -1022,6 +1185,15 @@ textarea {
 @keyframes orbitSpin {
   to {
     transform: rotateZ(360deg);
+  }
+}
+
+@keyframes premiumButtonBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 260% 50%;
   }
 }
 
