@@ -655,7 +655,7 @@ textarea {
 .diary-open-portal {
   display: grid;
   place-items: center;
-  gap: 1.2rem;
+  gap: 0.55rem;
   color: white;
   font-size: 0.72rem;
   font-weight: 800;
@@ -663,16 +663,21 @@ textarea {
   text-transform: uppercase;
 }
 
-.diary-open-portal span {
-  width: min(52vw, 20rem);
-  aspect-ratio: 1;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background:
-    radial-gradient(circle, transparent 30%, rgba(69, 163, 255, 0.3) 31%, rgba(126, 91, 255, 0.05) 62%, transparent 68%),
-    conic-gradient(from 120deg, transparent, rgba(255, 255, 255, 0.92), transparent, rgba(69, 163, 255, 0.62), transparent);
-  filter: drop-shadow(0 0 42px rgba(69, 163, 255, 0.42));
-  animation: diaryPortalOpen 0.74s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.diary-open-portal video {
+  width: min(74vw, 28rem);
+  max-height: min(48vh, 18rem);
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter:
+    drop-shadow(0 0 28px rgba(69, 163, 255, 0.42))
+    drop-shadow(0 0 62px rgba(126, 91, 255, 0.28));
+  animation: diaryLoaderVideoOpen 0.82s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.diary-open-portal p {
+  margin: 0;
+  opacity: 0.72;
+  text-shadow: 0 0 18px rgba(105, 178, 255, 0.32);
 }
 
 @keyframes tapExplorePulse {
@@ -1038,6 +1043,24 @@ textarea {
     transform: scale(1.26) rotate(220deg);
     filter: blur(0px);
     opacity: 1;
+  }
+}
+
+@keyframes diaryLoaderVideoOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+    filter:
+      blur(12px)
+      drop-shadow(0 0 10px rgba(69, 163, 255, 0.22));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter:
+      blur(0)
+      drop-shadow(0 0 28px rgba(69, 163, 255, 0.42))
+      drop-shadow(0 0 62px rgba(126, 91, 255, 0.28));
   }
 }
 

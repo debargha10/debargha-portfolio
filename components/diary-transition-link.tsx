@@ -18,7 +18,7 @@ export function DiaryTransitionLink({
   const openDiary = () => {
     if (opening) return;
     setOpening(true);
-    window.setTimeout(() => router.push("/diary"), 720);
+    window.setTimeout(() => router.push("/diary"), 1150);
   };
 
   return (
@@ -34,7 +34,16 @@ export function DiaryTransitionLink({
       {opening ? (
         <div className="diary-open-transition" aria-hidden="true">
           <div className="diary-open-portal">
-            <span />
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+            >
+              <source src="/diary/videos/loading-alpha.webm" type="video/webm" />
+              <source src="/diary/videos/loading.mp4" type="video/mp4" />
+            </video>
             <p>Opening Diary</p>
           </div>
         </div>
