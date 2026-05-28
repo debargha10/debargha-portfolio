@@ -25,8 +25,10 @@ export function TravelDiary() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
+  const [returnHidden, setReturnHidden] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  const lastScrollY = useRef(0);
   const lowerBackgroundVideo = diaryVideos[1]?.src ?? diaryVideos[0]?.src;
 
   useEffect(() => {
@@ -102,6 +104,25 @@ export function TravelDiary() {
     });
   }, [hoveredVideo]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const scrollingDown = currentY > lastScrollY.current;
+
+      if (currentY < 80) {
+        setReturnHidden(false);
+      } else if (Math.abs(currentY - lastScrollY.current) > 8) {
+        setReturnHidden(scrollingDown);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <main className="diary-page min-h-screen overflow-hidden bg-black text-white">
       <audio
@@ -118,7 +139,10 @@ export function TravelDiary() {
         }}
       />
       <div className="relative z-10">
-        <Link href="/#diary" className="diary-return-button">
+        <Link
+          href="/#diary"
+          className={`diary-return-button ${returnHidden ? "diary-return-button-hidden" : ""}`}
+        >
           <ArrowLeft size={17} />
           Return
         </Link>
