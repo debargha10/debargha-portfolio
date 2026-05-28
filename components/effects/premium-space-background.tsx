@@ -15,6 +15,8 @@ type ShootingStar = {
   peakOpacity: number;
 };
 
+type ScreenEdge = "top" | "right" | "bottom" | "left";
+
 function createRadialTexture(stops: Array<[number, string]>) {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
@@ -54,6 +56,18 @@ function createTrailTexture() {
 
 function randomRange(min: number, max: number) {
   return min + Math.random() * (max - min);
+}
+
+function pickExitEdge(edge: ScreenEdge): ScreenEdge {
+  const exits: Record<ScreenEdge, ScreenEdge[]> = {
+    top: ["bottom", "left", "right"],
+    right: ["left", "top", "bottom"],
+    bottom: ["top", "left", "right"],
+    left: ["right", "top", "bottom"],
+  };
+
+  const options = exits[edge];
+  return options[Math.floor(Math.random() * options.length)];
 }
 
 export function PremiumSpaceBackground() {
@@ -287,31 +301,28 @@ export function PremiumSpaceBackground() {
       const halfWidth = width / 2;
       const halfHeight = height / 2;
       const margin = Math.max(width, height) * 0.08 + 80;
-      const side = Math.floor(Math.random() * 4);
-      const start = new THREE.Vector3(0, 0, 0);
-      const target = new THREE.Vector3(
-        randomRange(-halfWidth * 0.72, halfWidth * 0.72),
-        randomRange(-halfHeight * 0.72, halfHeight * 0.72),
-        0,
-      );
+      const edges: ScreenEdge[] = ["top", "right", "bottom", "left"];
+      const startEdge = edges[Math.floor(Math.random() * edges.length)];
+      const endEdge = pickExitEdge(startEdge);
+      const edgePoint = (edge: ScreenEdge) => {
+        if (edge === "top") {
+          return new THREE.Vector3(randomRange(-halfWidth, halfWidth), halfHeight + margin, 0);
+        }
+        if (edge === "right") {
+          return new THREE.Vector3(halfWidth + margin, randomRange(-halfHeight, halfHeight), 0);
+        }
+        if (edge === "bottom") {
+          return new THREE.Vector3(randomRange(-halfWidth, halfWidth), -halfHeight - margin, 0);
+        }
+        return new THREE.Vector3(-halfWidth - margin, randomRange(-halfHeight, halfHeight), 0);
+      };
+      const start = edgePoint(startEdge);
+      const end = edgePoint(endEdge);
+      const travel = end.clone().sub(start);
+      const distance = travel.length();
+      const direction = travel.normalize();
 
-      if (side === 0) {
-        start.set(randomRange(-halfWidth, halfWidth), halfHeight + margin, 0);
-        target.y = randomRange(-halfHeight * 0.72, halfHeight * 0.18);
-      } else if (side === 1) {
-        start.set(halfWidth + margin, randomRange(-halfHeight, halfHeight), 0);
-        target.x = randomRange(-halfWidth * 0.72, halfWidth * 0.2);
-      } else if (side === 2) {
-        start.set(randomRange(-halfWidth, halfWidth), -halfHeight - margin, 0);
-        target.y = randomRange(-halfHeight * 0.18, halfHeight * 0.72);
-      } else {
-        start.set(-halfWidth - margin, randomRange(-halfHeight, halfHeight), 0);
-        target.x = randomRange(-halfWidth * 0.2, halfWidth * 0.72);
-      }
-
-      const direction = target.sub(start).normalize();
-
-      const speed = randomRange(620, 940);
+      const speed = randomRange(720, 1040);
       const length = THREE.MathUtils.clamp(width * randomRange(0.14, 0.22), 145, 330);
       const trailMaterial = new THREE.MeshBasicMaterial({
         map: trailTexture,
@@ -348,8 +359,8 @@ export function PremiumSpaceBackground() {
         headMaterial,
         velocity: direction.multiplyScalar(speed),
         age: 0,
-        life: randomRange(1.55, 2.35),
-        peakOpacity: randomRange(0.56, 0.82),
+        life: distance / speed,
+        peakOpacity: randomRange(0.72, 0.94),
       });
     };
 
@@ -367,8 +378,8 @@ export function PremiumSpaceBackground() {
     let frame = 0;
     const clock = new THREE.Clock();
     const animate = () => {
-      const elapsed = clock.getElapsedTime();
       const delta = Math.min(clock.getDelta(), 0.034);
+      const elapsed = clock.elapsedTime;
 
       pointer.lerp(targetPointer, 0.025);
       camera.position.x = pointer.x * 0.24;
@@ -399,7 +410,7 @@ export function PremiumSpaceBackground() {
 
       if (elapsed >= nextSpawn) {
         spawnShootingStar();
-        nextSpawn = elapsed + 2;
+        nextSpawn += 2;
       }
 
       for (let index = shootingStars.length - 1; index >= 0; index -= 1) {
