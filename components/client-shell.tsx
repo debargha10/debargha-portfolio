@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useLenis } from "@/hooks/use-lenis";
 import { CursorGlow } from "@/components/cursor-glow";
 import { ScrollProgress } from "@/components/scroll-progress";
-import { ThreeBackground } from "@/components/three-background";
+import { PremiumSpaceBackground } from "@/components/effects/premium-space-background";
 import { BackgroundAudio } from "@/components/background-audio";
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
@@ -55,38 +55,10 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
         ) : null}
       </AnimatePresence>
       <BackgroundAudio />
-      <ThreeBackground />
-      <div className="space-canvas" aria-hidden="true">
-        <div className="solar-system">
-          <span className="sun" />
-          <span className="orbit orbit-one">
-            <span className="planet planet-one" />
-          </span>
-          <span className="orbit orbit-two">
-            <span className="planet planet-two" />
-          </span>
-          <span className="orbit orbit-three">
-            <span className="planet planet-three" />
-          </span>
-          <span className="orbit orbit-four">
-            <span className="planet planet-four" />
-          </span>
-        </div>
-        <span className="shooting-star shooting-star-a" />
-        <span className="shooting-star shooting-star-b" />
-        <span className="shooting-star shooting-star-c" />
-        <span className="shooting-star shooting-star-d" />
-        <span className="shooting-star shooting-star-e" />
-      </div>
-      <div className="cosmic-veil" aria-hidden="true" />
+      <PremiumSpaceBackground />
       <ScrollProgress />
       <CursorGlow />
       <div className="relative z-10">{children}</div>
-      <div className="starfall-layer" aria-hidden="true">
-        {Array.from({ length: 18 }, (_, index) => (
-          <span key={index} />
-        ))}
-      </div>
     </>
   );
 }

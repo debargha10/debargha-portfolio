@@ -56,9 +56,18 @@ export function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -40, opacity: 0 }}
-      animate={{ y: hidden ? -110 : 0, opacity: hidden ? 0 : 1 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ y: -42, opacity: 0, filter: "blur(14px)", scale: 0.985 }}
+      animate={{
+        y: hidden ? -118 : 0,
+        opacity: hidden ? 0 : 1,
+        filter: hidden ? "blur(18px)" : "blur(0px)",
+        scale: hidden ? 0.985 : 1,
+      }}
+      transition={{ duration: hidden ? 0.56 : 0.72, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        pointerEvents: hidden ? "none" : "auto",
+        willChange: "transform, opacity, filter",
+      }}
       className="fixed left-0 right-0 top-0 z-[80] px-4 pt-4"
     >
       <nav
