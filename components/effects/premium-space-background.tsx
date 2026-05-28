@@ -57,17 +57,19 @@ function randomRange(min: number, max: number) {
 }
 
 export function PremiumSpaceBackground() {
-  const hostRef = useRef<HTMLDivElement>(null);
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  const shootingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
+    const backgroundHost = backgroundRef.current;
+    const shootingHost = shootingRef.current;
+    if (!backgroundHost || !shootingHost) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       58,
-      host.clientWidth / host.clientHeight,
+      backgroundHost.clientWidth / backgroundHost.clientHeight,
       0.1,
       130,
     );
@@ -80,11 +82,36 @@ export function PremiumSpaceBackground() {
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, host.clientWidth < 768 ? 1.25 : 1.55));
-    renderer.setSize(host.clientWidth, host.clientHeight);
-    host.appendChild(renderer.domElement);
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, backgroundHost.clientWidth < 768 ? 1.25 : 1.55),
+    );
+    renderer.setSize(backgroundHost.clientWidth, backgroundHost.clientHeight);
+    backgroundHost.appendChild(renderer.domElement);
 
-    const starCount = host.clientWidth < 768 ? 620 : 1080;
+    const shootingScene = new THREE.Scene();
+    const shootingCamera = new THREE.OrthographicCamera(
+      -shootingHost.clientWidth / 2,
+      shootingHost.clientWidth / 2,
+      shootingHost.clientHeight / 2,
+      -shootingHost.clientHeight / 2,
+      0.1,
+      10,
+    );
+    shootingCamera.position.z = 5;
+    const shootingRenderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: "high-performance",
+    });
+    shootingRenderer.outputColorSpace = THREE.SRGBColorSpace;
+    shootingRenderer.setClearColor(0x000000, 0);
+    shootingRenderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, shootingHost.clientWidth < 768 ? 1.2 : 1.45),
+    );
+    shootingRenderer.setSize(shootingHost.clientWidth, shootingHost.clientHeight);
+    shootingHost.appendChild(shootingRenderer.domElement);
+
+    const starCount = backgroundHost.clientWidth < 768 ? 620 : 1080;
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
     const color = new THREE.Color();
@@ -109,7 +136,7 @@ export function PremiumSpaceBackground() {
     starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
     starGeometry.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
     const starMaterial = new THREE.PointsMaterial({
-      size: host.clientWidth < 768 ? 0.035 : 0.045,
+      size: backgroundHost.clientWidth < 768 ? 0.035 : 0.045,
       transparent: true,
       opacity: 0.58,
       vertexColors: true,
@@ -119,7 +146,7 @@ export function PremiumSpaceBackground() {
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
-    const dustCount = host.clientWidth < 768 ? 130 : 230;
+    const dustCount = backgroundHost.clientWidth < 768 ? 130 : 230;
     const dustPositions = new Float32Array(dustCount * 3);
     for (let index = 0; index < dustCount; index += 1) {
       const offset = index * 3;
@@ -250,37 +277,42 @@ export function PremiumSpaceBackground() {
     ]);
     const trailGeometry = new THREE.PlaneGeometry(1, 1);
     const shootingStars: ShootingStar[] = [];
-    let nextSpawn = reducedMotion ? Number.POSITIVE_INFINITY : randomRange(1.6, 4.4);
-
-    const getViewport = () => {
-      const z = 1.4;
-      const distance = camera.position.z - z;
-      const height = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * distance;
-      return { width: height * camera.aspect, height, z };
-    };
+    let nextSpawn = reducedMotion ? Number.POSITIVE_INFINITY : 0.7;
 
     const spawnShootingStar = () => {
-      if (!trailTexture || !headTexture || shootingStars.length > 1) return;
+      if (!trailTexture || !headTexture || shootingStars.length > 3) return;
 
-      const { width, height, z } = getViewport();
-      const side = Math.floor(Math.random() * 3);
-      const start = new THREE.Vector3(0, 0, randomRange(z - 1.4, z + 0.8));
-      const direction = new THREE.Vector3(0, 0, 0);
+      const width = shootingHost.clientWidth;
+      const height = shootingHost.clientHeight;
+      const halfWidth = width / 2;
+      const halfHeight = height / 2;
+      const margin = Math.max(width, height) * 0.08 + 80;
+      const side = Math.floor(Math.random() * 4);
+      const start = new THREE.Vector3(0, 0, 0);
+      const target = new THREE.Vector3(
+        randomRange(-halfWidth * 0.72, halfWidth * 0.72),
+        randomRange(-halfHeight * 0.72, halfHeight * 0.72),
+        0,
+      );
 
       if (side === 0) {
-        start.set(randomRange(-width * 0.45, width * 0.45), height * 0.58, start.z);
-        direction.set(Math.random() > 0.5 ? 0.64 : -0.64, -0.76, 0);
+        start.set(randomRange(-halfWidth, halfWidth), halfHeight + margin, 0);
+        target.y = randomRange(-halfHeight * 0.72, halfHeight * 0.18);
       } else if (side === 1) {
-        start.set(-width * 0.58, randomRange(-height * 0.22, height * 0.5), start.z);
-        direction.set(0.9, -0.44, 0);
+        start.set(halfWidth + margin, randomRange(-halfHeight, halfHeight), 0);
+        target.x = randomRange(-halfWidth * 0.72, halfWidth * 0.2);
+      } else if (side === 2) {
+        start.set(randomRange(-halfWidth, halfWidth), -halfHeight - margin, 0);
+        target.y = randomRange(-halfHeight * 0.18, halfHeight * 0.72);
       } else {
-        start.set(width * 0.58, randomRange(-height * 0.16, height * 0.5), start.z);
-        direction.set(-0.88, -0.48, 0);
+        start.set(-halfWidth - margin, randomRange(-halfHeight, halfHeight), 0);
+        target.x = randomRange(-halfWidth * 0.2, halfWidth * 0.72);
       }
 
-      direction.normalize();
-      const speed = randomRange(4.1, 5.8);
-      const length = THREE.MathUtils.clamp(width * randomRange(0.1, 0.16), 1.6, 3.35);
+      const direction = target.sub(start).normalize();
+
+      const speed = randomRange(620, 940);
+      const length = THREE.MathUtils.clamp(width * randomRange(0.14, 0.22), 145, 330);
       const trailMaterial = new THREE.MeshBasicMaterial({
         map: trailTexture,
         transparent: true,
@@ -302,12 +334,12 @@ export function PremiumSpaceBackground() {
 
       const trail = new THREE.Mesh(trailGeometry, trailMaterial);
       trail.position.x = -length * 0.5;
-      trail.scale.set(length, randomRange(0.035, 0.056), 1);
+      trail.scale.set(length, randomRange(8, 13), 1);
       const head = new THREE.Sprite(headMaterial);
-      head.scale.setScalar(randomRange(0.16, 0.23));
+      head.scale.setScalar(randomRange(24, 34));
 
       group.add(trail, head);
-      scene.add(group);
+      shootingScene.add(group);
       shootingStars.push({
         group,
         trail,
@@ -316,8 +348,8 @@ export function PremiumSpaceBackground() {
         headMaterial,
         velocity: direction.multiplyScalar(speed),
         age: 0,
-        life: randomRange(2.3, 3.4),
-        peakOpacity: randomRange(0.42, 0.68),
+        life: randomRange(1.55, 2.35),
+        peakOpacity: randomRange(0.56, 0.82),
       });
     };
 
@@ -367,7 +399,7 @@ export function PremiumSpaceBackground() {
 
       if (elapsed >= nextSpawn) {
         spawnShootingStar();
-        nextSpawn = elapsed + randomRange(4.8, 9.5);
+        nextSpawn = elapsed + 2;
       }
 
       for (let index = shootingStars.length - 1; index >= 0; index -= 1) {
@@ -378,11 +410,11 @@ export function PremiumSpaceBackground() {
         star.group.position.addScaledVector(star.velocity, delta);
         star.trailMaterial.opacity = fade * star.peakOpacity;
         star.headMaterial.opacity = fade * Math.min(star.peakOpacity + 0.24, 0.86);
-        star.head.scale.setScalar(0.16 + fade * 0.08);
-        star.trail.scale.y = 0.034 + fade * 0.02;
+        star.head.scale.setScalar(22 + fade * 14);
+        star.trail.scale.y = 7 + fade * 8;
 
         if (progress >= 1) {
-          scene.remove(star.group);
+          shootingScene.remove(star.group);
           star.group.remove(star.trail, star.head);
           star.trailMaterial.dispose();
           star.headMaterial.dispose();
@@ -391,14 +423,27 @@ export function PremiumSpaceBackground() {
       }
 
       renderer.render(scene, camera);
+      shootingRenderer.render(shootingScene, shootingCamera);
       frame = window.requestAnimationFrame(animate);
     };
 
     const handleResize = () => {
-      camera.aspect = host.clientWidth / host.clientHeight;
+      camera.aspect = backgroundHost.clientWidth / backgroundHost.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, host.clientWidth < 768 ? 1.25 : 1.55));
-      renderer.setSize(host.clientWidth, host.clientHeight);
+      renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, backgroundHost.clientWidth < 768 ? 1.25 : 1.55),
+      );
+      renderer.setSize(backgroundHost.clientWidth, backgroundHost.clientHeight);
+
+      shootingCamera.left = -shootingHost.clientWidth / 2;
+      shootingCamera.right = shootingHost.clientWidth / 2;
+      shootingCamera.top = shootingHost.clientHeight / 2;
+      shootingCamera.bottom = -shootingHost.clientHeight / 2;
+      shootingCamera.updateProjectionMatrix();
+      shootingRenderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, shootingHost.clientWidth < 768 ? 1.2 : 1.45),
+      );
+      shootingRenderer.setSize(shootingHost.clientWidth, shootingHost.clientHeight);
       if (reducedMotion) renderStaticFrame();
     };
 
@@ -419,7 +464,7 @@ export function PremiumSpaceBackground() {
       window.removeEventListener("pointermove", handlePointerMove);
 
       shootingStars.forEach((star) => {
-        scene.remove(star.group);
+        shootingScene.remove(star.group);
         star.trailMaterial.dispose();
         star.headMaterial.dispose();
       });
@@ -443,17 +488,24 @@ export function PremiumSpaceBackground() {
       headTexture?.dispose();
       trailGeometry.dispose();
       renderer.dispose();
-      if (renderer.domElement.parentElement === host) {
-        host.removeChild(renderer.domElement);
+      shootingRenderer.dispose();
+      if (renderer.domElement.parentElement === backgroundHost) {
+        backgroundHost.removeChild(renderer.domElement);
+      }
+      if (shootingRenderer.domElement.parentElement === shootingHost) {
+        shootingHost.removeChild(shootingRenderer.domElement);
       }
     };
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(96,148,255,0.22),transparent_30rem),radial-gradient(circle_at_76%_18%,rgba(164,196,255,0.16),transparent_26rem),linear-gradient(180deg,rgba(1,2,9,0.18),rgba(1,2,9,0.72))]" />
-      <div ref={hostRef} className="absolute inset-0 opacity-95" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.08),transparent_42%),linear-gradient(90deg,rgba(1,2,9,0.34),transparent_32%,transparent_68%,rgba(1,2,9,0.38))]" />
-    </div>
+    <>
+      <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden" aria-hidden="true">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(96,148,255,0.22),transparent_30rem),radial-gradient(circle_at_76%_18%,rgba(164,196,255,0.16),transparent_26rem),linear-gradient(180deg,rgba(1,2,9,0.18),rgba(1,2,9,0.72))]" />
+        <div ref={backgroundRef} className="absolute inset-0 opacity-95" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.08),transparent_42%),linear-gradient(90deg,rgba(1,2,9,0.34),transparent_32%,transparent_68%,rgba(1,2,9,0.38))]" />
+      </div>
+      <div ref={shootingRef} className="pointer-events-none fixed inset-0 z-[60]" aria-hidden="true" />
+    </>
   );
 }
