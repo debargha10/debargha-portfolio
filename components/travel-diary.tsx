@@ -10,6 +10,16 @@ import { diaryHeroVideos, diaryImages, diaryMusic, diaryVideos } from "@/lib/dia
 
 const AUDIO_START_TIME = 0.06;
 const AUDIO_VOLUME = 0.8;
+const TYPEWRITER_LETTER_DELAY_SECONDS = 0.5;
+const TYPEWRITER_LETTER_DURATION_SECONDS = 0.32;
+const DIARY_TITLE_TEXT = "MY DIARY";
+const DIARY_SUBTITLE_TEXT = "exploring the new";
+const DIARY_SUBTITLE_OFFSET = 8;
+const AIR_VIDEO_REVEAL_DELAY_MS = Math.round(
+  ((DIARY_SUBTITLE_OFFSET + DIARY_SUBTITLE_TEXT.length - 1) * TYPEWRITER_LETTER_DELAY_SECONDS +
+    TYPEWRITER_LETTER_DURATION_SECONDS) *
+    1000,
+);
 
 function seekToStart(audio: HTMLAudioElement) {
   try {
@@ -26,7 +36,9 @@ export function TravelDiary() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
   const [returnHidden, setReturnHidden] = useState(false);
+  const [airVisible, setAirVisible] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const airVideoRef = useRef<HTMLVideoElement>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
   const lastScrollY = useRef(0);
   const lowerBackgroundVideo = diaryVideos[1]?.src ?? diaryVideos[0]?.src;
@@ -123,6 +135,22 @@ export function TravelDiary() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setAirVisible(true);
+      const video = airVideoRef.current;
+      if (!video) return;
+      try {
+        video.currentTime = 0;
+      } catch {
+        // Some mobile browsers allow seeking only after metadata is ready.
+      }
+      void video.play().catch(() => undefined);
+    }, AIR_VIDEO_REVEAL_DELAY_MS);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
   return (
     <main className="diary-page min-h-screen overflow-hidden bg-black text-white">
       <audio
@@ -160,15 +188,29 @@ export function TravelDiary() {
             <source src={diaryHeroVideos.desktop} media="(min-width: 768px)" type="video/mp4" />
           </video>
           <div className="mx-auto w-full max-w-7xl">
-            <motion.div
-              initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="diary-typewriter-wrap"
-            >
-              <TypewriterLine text="MY DIARY" />
-              <TypewriterLine text="exploring the new" offset={8} />
-            </motion.div>
+            <div className="diary-hero-copy-row">
+              <motion.div
+                initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                className="diary-typewriter-wrap"
+              >
+                <TypewriterLine text={DIARY_TITLE_TEXT} />
+                <TypewriterLine text={DIARY_SUBTITLE_TEXT} offset={DIARY_SUBTITLE_OFFSET} />
+              </motion.div>
+              <video
+                ref={airVideoRef}
+                className={`diary-air-video ${airVisible ? "diary-air-video-visible" : ""}`}
+                muted
+                loop
+                playsInline
+                preload="auto"
+                aria-hidden="true"
+              >
+                <source src="/diary/videos/air-alpha.webm" type="video/webm" />
+                <source src="/diary/videos/air.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
         </section>
 
@@ -281,8 +323,8 @@ function TypewriterLine({ text, offset = 0 }: { text: string; offset?: number })
           initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
           animate={{ opacity: letter === " " ? 1 : 0.82, y: 0, filter: "blur(0px)" }}
           transition={{
-            delay: (offset + index) * 0.5,
-            duration: 0.32,
+            delay: (offset + index) * TYPEWRITER_LETTER_DELAY_SECONDS,
+            duration: TYPEWRITER_LETTER_DURATION_SECONDS,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
