@@ -748,8 +748,8 @@ textarea {
 }
 
 .diary-air-video {
-  width: clamp(7rem, 18vw, 13rem);
-  max-height: clamp(5.2rem, 12vw, 9.2rem);
+  width: clamp(5.8rem, 14vw, 10.5rem);
+  max-height: clamp(4.4rem, 9.5vw, 7.4rem);
   flex: 0 0 auto;
   object-fit: contain;
   opacity: 0;
@@ -795,8 +795,8 @@ textarea {
   }
 
   .diary-air-video {
-    width: clamp(4.8rem, 24vw, 6.8rem);
-    max-height: 5rem;
+    width: clamp(3.9rem, 19vw, 5.5rem);
+    max-height: 4.1rem;
     transform: translateX(-0.35rem) scale(0.9);
   }
 }
