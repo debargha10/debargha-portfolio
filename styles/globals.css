@@ -479,6 +479,18 @@ textarea {
   animation: tapExplorePulse 2.2s ease-in-out infinite;
 }
 
+@media (max-width: 767px) {
+  .tap-explore-pop {
+    position: static;
+    display: inline-flex;
+    margin-top: 0.9rem;
+    padding: 0.42rem 0.62rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    transform-origin: left center;
+  }
+}
+
 .diary-open-transition {
   position: fixed;
   inset: 0;
@@ -569,9 +581,26 @@ textarea {
   flex-direction: column;
   gap: 0.7rem;
   padding: 0.4rem 0;
+  transform: translateY(-2rem);
   text-shadow:
     0 0 26px rgba(255, 255, 255, 0.2),
     0 10px 34px rgba(0, 0, 0, 0.68);
+}
+
+@media (max-width: 767px) {
+  .diary-hero-stage {
+    align-items: center;
+    padding-bottom: 4rem;
+  }
+
+  .diary-hero-video {
+    object-fit: contain;
+    background: #000;
+  }
+
+  .diary-typewriter-wrap {
+    transform: translateY(-1.4rem);
+  }
 }
 
 .diary-typewriter-line {

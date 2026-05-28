@@ -2,18 +2,40 @@
 
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { navItems } from "@/lib/data";
 import { useScrollPercent } from "@/hooks/use-scroll-progress";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const { isScrolled } = useScrollPercent();
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const scrollingDown = currentY > lastScrollY.current;
+
+      if (currentY < 80 || open) {
+        setHidden(false);
+      } else if (Math.abs(currentY - lastScrollY.current) > 8) {
+        setHidden(scrollingDown);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [open]);
 
   return (
     <motion.header
       initial={{ y: -40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      animate={{ y: hidden ? -110 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="fixed left-0 right-0 top-0 z-[80] px-4 pt-4"
     >
       <nav
