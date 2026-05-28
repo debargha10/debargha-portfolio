@@ -608,17 +608,6 @@ export function PremiumSpaceBackground() {
   return (
     <>
       <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden" aria-hidden="true">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 size-full object-cover opacity-70 saturate-125 contrast-110"
-        >
-          <source src="/background/phone.mp4" media="(max-width: 767px)" type="video/mp4" />
-          <source src="/background/laptop.mp4" media="(min-width: 768px)" type="video/mp4" />
-        </video>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(96,148,255,0.22),transparent_30rem),radial-gradient(circle_at_76%_18%,rgba(164,196,255,0.16),transparent_26rem),linear-gradient(180deg,rgba(1,2,9,0.18),rgba(1,2,9,0.72))]" />
         <div ref={backgroundRef} className="absolute inset-0 opacity-95" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.08),transparent_42%),linear-gradient(90deg,rgba(1,2,9,0.34),transparent_32%,transparent_68%,rgba(1,2,9,0.38))]" />

@@ -645,7 +645,7 @@ textarea {
   }
 
   .diary-hero-video {
-    object-fit: contain;
+    object-fit: cover;
     background: #000;
   }
 

@@ -24,5 +24,8 @@ export const diaryVideos: DiaryVideo[] = Array.from({ length: 6 }, (_, index) =>
   };
 });
 
-export const diaryHeroVideo = "/diary/videos/top.mp4";
+export const diaryHeroVideos = {
+  desktop: "/background/laptop.mp4",
+  mobile: "/background/phone.mp4",
+};
 export const diaryMusic = "/diary/audio/travel.mp3";

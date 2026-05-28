@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { diaryHeroVideo, diaryImages, diaryMusic, diaryVideos } from "@/lib/diary-data";
+import { diaryHeroVideos, diaryImages, diaryMusic, diaryVideos } from "@/lib/diary-data";
 
 const AUDIO_START_TIME = 0.06;
 const AUDIO_VOLUME = 0.8;
@@ -150,13 +150,15 @@ export function TravelDiary() {
         <section className="diary-hero-stage relative flex min-h-screen items-end overflow-hidden px-5 pb-16 pt-28">
           <video
             className="diary-hero-video"
-            src={diaryHeroVideo}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-          />
+          >
+            <source src={diaryHeroVideos.mobile} media="(max-width: 767px)" type="video/mp4" />
+            <source src={diaryHeroVideos.desktop} media="(min-width: 768px)" type="video/mp4" />
+          </video>
           <div className="mx-auto w-full max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 40, filter: "blur(16px)" }}
