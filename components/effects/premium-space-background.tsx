@@ -6,9 +6,13 @@ import * as THREE from "three";
 type ShootingStar = {
   group: THREE.Group;
   trail: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
+  core: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
   head: THREE.Sprite;
+  halo: THREE.Sprite;
   trailMaterial: THREE.MeshBasicMaterial;
+  coreMaterial: THREE.MeshBasicMaterial;
   headMaterial: THREE.SpriteMaterial;
+  haloMaterial: THREE.SpriteMaterial;
   velocity: THREE.Vector3;
   age: number;
   life: number;
@@ -36,18 +40,68 @@ function createRadialTexture(stops: Array<[number, string]>) {
 
 function createTrailTexture() {
   const canvas = document.createElement("canvas");
-  canvas.width = 768;
-  canvas.height = 80;
+  canvas.width = 1024;
+  canvas.height = 128;
   const context = canvas.getContext("2d");
   if (!context) return null;
 
-  const gradient = context.createLinearGradient(0, 40, 768, 40);
-  gradient.addColorStop(0, "rgba(120,180,255,0)");
-  gradient.addColorStop(0.5, "rgba(130,198,255,0.16)");
-  gradient.addColorStop(0.82, "rgba(205,232,255,0.44)");
-  gradient.addColorStop(1, "rgba(255,255,255,0.94)");
+  const gradient = context.createLinearGradient(0, 64, 1024, 64);
+  gradient.addColorStop(0, "rgba(80,150,255,0)");
+  gradient.addColorStop(0.38, "rgba(105,178,255,0.12)");
+  gradient.addColorStop(0.78, "rgba(178,222,255,0.48)");
+  gradient.addColorStop(1, "rgba(255,255,255,0.98)");
   context.fillStyle = gradient;
-  context.fillRect(0, 0, 768, 80);
+  context.fillRect(0, 0, 1024, 128);
+
+  const feather = context.createLinearGradient(0, 0, 0, 128);
+  feather.addColorStop(0, "rgba(0,0,0,0)");
+  feather.addColorStop(0.38, "rgba(0,0,0,0.72)");
+  feather.addColorStop(0.5, "rgba(0,0,0,1)");
+  feather.addColorStop(0.62, "rgba(0,0,0,0.72)");
+  feather.addColorStop(1, "rgba(0,0,0,0)");
+  context.globalCompositeOperation = "destination-in";
+  context.fillStyle = feather;
+  context.fillRect(0, 0, 1024, 128);
+  context.globalCompositeOperation = "source-over";
+
+  const spark = context.createRadialGradient(984, 64, 0, 984, 64, 80);
+  spark.addColorStop(0, "rgba(255,255,255,0.9)");
+  spark.addColorStop(0.42, "rgba(154,211,255,0.38)");
+  spark.addColorStop(1, "rgba(0,0,0,0)");
+  context.globalCompositeOperation = "lighter";
+  context.fillStyle = spark;
+  context.fillRect(904, 0, 120, 128);
+  context.globalCompositeOperation = "source-over";
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function createCoreTrailTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 48;
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+
+  const gradient = context.createLinearGradient(0, 24, 1024, 24);
+  gradient.addColorStop(0, "rgba(255,255,255,0)");
+  gradient.addColorStop(0.48, "rgba(184,224,255,0.12)");
+  gradient.addColorStop(0.82, "rgba(226,244,255,0.74)");
+  gradient.addColorStop(1, "rgba(255,255,255,1)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 1024, 48);
+
+  const feather = context.createLinearGradient(0, 0, 0, 48);
+  feather.addColorStop(0, "rgba(0,0,0,0)");
+  feather.addColorStop(0.45, "rgba(0,0,0,0.82)");
+  feather.addColorStop(0.5, "rgba(0,0,0,1)");
+  feather.addColorStop(0.55, "rgba(0,0,0,0.82)");
+  feather.addColorStop(1, "rgba(0,0,0,0)");
+  context.globalCompositeOperation = "destination-in";
+  context.fillStyle = feather;
+  context.fillRect(0, 0, 1024, 48);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -283,18 +337,20 @@ export function PremiumSpaceBackground() {
     });
 
     const trailTexture = createTrailTexture();
+    const coreTrailTexture = createCoreTrailTexture();
     const headTexture = createRadialTexture([
       [0, "rgba(255,255,255,1)"],
-      [0.2, "rgba(190,226,255,0.82)"],
-      [0.58, "rgba(95,172,255,0.22)"],
+      [0.14, "rgba(240,250,255,0.96)"],
+      [0.34, "rgba(164,216,255,0.62)"],
+      [0.68, "rgba(80,166,255,0.2)"],
       [1, "rgba(0,0,0,0)"],
     ]);
     const trailGeometry = new THREE.PlaneGeometry(1, 1);
     const shootingStars: ShootingStar[] = [];
-    let nextSpawn = reducedMotion ? Number.POSITIVE_INFINITY : 0.7;
+    let nextSpawn = reducedMotion ? Number.POSITIVE_INFINITY : 0.5;
 
     const spawnShootingStar = () => {
-      if (!trailTexture || !headTexture || shootingStars.length > 3) return;
+      if (!trailTexture || !coreTrailTexture || !headTexture || shootingStars.length >= 12) return;
 
       const width = shootingHost.clientWidth;
       const height = shootingHost.clientHeight;
@@ -322,10 +378,18 @@ export function PremiumSpaceBackground() {
       const distance = travel.length();
       const direction = travel.normalize();
 
-      const speed = randomRange(720, 1040);
-      const length = THREE.MathUtils.clamp(width * randomRange(0.14, 0.22), 145, 330);
+      const speed = randomRange(900, 1260);
+      const length = THREE.MathUtils.clamp(width * randomRange(0.16, 0.26), 175, 390);
       const trailMaterial = new THREE.MeshBasicMaterial({
         map: trailTexture,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      });
+      const coreMaterial = new THREE.MeshBasicMaterial({
+        map: coreTrailTexture,
         transparent: true,
         opacity: 0,
         blending: THREE.AdditiveBlending,
@@ -339,29 +403,51 @@ export function PremiumSpaceBackground() {
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
+      const haloMaterial = new THREE.SpriteMaterial({
+        map: headTexture,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
       const group = new THREE.Group();
       group.position.copy(start);
       group.rotation.z = Math.atan2(direction.y, direction.x);
 
       const trail = new THREE.Mesh(trailGeometry, trailMaterial);
       trail.position.x = -length * 0.5;
-      trail.scale.set(length, randomRange(8, 13), 1);
+      trail.scale.set(length, randomRange(14, 22), 1);
+      const core = new THREE.Mesh(trailGeometry, coreMaterial);
+      core.position.x = -length * 0.42;
+      core.scale.set(length * randomRange(0.62, 0.82), randomRange(4, 7), 1);
       const head = new THREE.Sprite(headMaterial);
-      head.scale.setScalar(randomRange(24, 34));
+      head.scale.setScalar(randomRange(26, 38));
+      const halo = new THREE.Sprite(haloMaterial);
+      halo.scale.setScalar(randomRange(58, 82));
 
-      group.add(trail, head);
+      group.add(trail, core, halo, head);
       shootingScene.add(group);
       shootingStars.push({
         group,
         trail,
+        core,
         head,
+        halo,
         trailMaterial,
+        coreMaterial,
         headMaterial,
+        haloMaterial,
         velocity: direction.multiplyScalar(speed),
         age: 0,
         life: distance / speed,
-        peakOpacity: randomRange(0.72, 0.94),
+        peakOpacity: randomRange(0.8, 1),
       });
+    };
+
+    const spawnShootingWave = () => {
+      for (let index = 0; index < 3; index += 1) {
+        spawnShootingStar();
+      }
     };
 
     const pointer = new THREE.Vector2(0, 0);
@@ -409,8 +495,8 @@ export function PremiumSpaceBackground() {
       });
 
       if (elapsed >= nextSpawn) {
-        spawnShootingStar();
-        nextSpawn += 2;
+        spawnShootingWave();
+        nextSpawn = elapsed + 1;
       }
 
       for (let index = shootingStars.length - 1; index >= 0; index -= 1) {
@@ -418,17 +504,24 @@ export function PremiumSpaceBackground() {
         star.age += delta;
         const progress = star.age / star.life;
         const fade = Math.sin(Math.min(progress, 1) * Math.PI);
+        const sparkle = 0.88 + Math.sin((elapsed + index) * 18) * 0.12;
         star.group.position.addScaledVector(star.velocity, delta);
         star.trailMaterial.opacity = fade * star.peakOpacity;
-        star.headMaterial.opacity = fade * Math.min(star.peakOpacity + 0.24, 0.86);
-        star.head.scale.setScalar(22 + fade * 14);
-        star.trail.scale.y = 7 + fade * 8;
+        star.coreMaterial.opacity = fade * Math.min(star.peakOpacity + 0.12, 1);
+        star.headMaterial.opacity = fade * sparkle;
+        star.haloMaterial.opacity = fade * 0.34;
+        star.head.scale.setScalar(25 + fade * 18);
+        star.halo.scale.setScalar(54 + fade * 48);
+        star.trail.scale.y = 10 + fade * 13;
+        star.core.scale.y = 3.5 + fade * 5;
 
         if (progress >= 1) {
           shootingScene.remove(star.group);
-          star.group.remove(star.trail, star.head);
+          star.group.remove(star.trail, star.core, star.halo, star.head);
           star.trailMaterial.dispose();
+          star.coreMaterial.dispose();
           star.headMaterial.dispose();
+          star.haloMaterial.dispose();
           shootingStars.splice(index, 1);
         }
       }
@@ -477,7 +570,9 @@ export function PremiumSpaceBackground() {
       shootingStars.forEach((star) => {
         shootingScene.remove(star.group);
         star.trailMaterial.dispose();
+        star.coreMaterial.dispose();
         star.headMaterial.dispose();
+        star.haloMaterial.dispose();
       });
       starGeometry.dispose();
       starMaterial.dispose();
@@ -496,6 +591,7 @@ export function PremiumSpaceBackground() {
         planetMaterial.dispose();
       });
       trailTexture?.dispose();
+      coreTrailTexture?.dispose();
       headTexture?.dispose();
       trailGeometry.dispose();
       renderer.dispose();
